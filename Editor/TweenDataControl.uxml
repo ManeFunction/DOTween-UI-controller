@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" 
+         xmlns:uie="UnityEditor.UIElements" 
+         editor-extension-mode="True">
+    
+    <ui:VisualElement class="tween-block">
+        <ui:VisualElement name="messageBox" class="message-box" >
+            <ui:Image name="messageIcon" class="message-icon" />
+            <ui:Label text="" name="messageBoxLabel" class="message-box-label" />
+        </ui:VisualElement>
+        <ui:Toggle name="isEnableToggle" binding-path="_isEnable" text="Is Enabled" class="tween-header" />
+        <ui:VisualElement name="contentContainer" class="tween-content">
+            <uie:PropertyField label="Delay" binding-path="_delay" />
+            <uie:PropertyField label="Direction" binding-path="_direction" />
+            <uie:PropertyField label="Value" binding-path="_value" />
+            <uie:PropertyField label="Duration" binding-path="_duration" />
+            <ui:VisualElement class="options-block">
+                <uie:IntegerField label="Loop Count" binding-path="_loopCount" name="loopCountField" class="int-field" />
+                <ui:VisualElement name="loopOptions" >
+                    <uie:PropertyField label="Delay Between" binding-path="_delayBetweenLoops" />
+                    <uie:PropertyField label="Loop Type" binding-path="_loopType" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="options-block">
+                <ui:Toggle name="useCurveToggle" label="Use Curve" binding-path="_easeData._useCurve" class="ease-toggle" />
+                <uie:PropertyField name="curveField" label="Curve" binding-path="_easeData._curve" />
+                <uie:PropertyField name="easeField" label="Ease" binding-path="_easeData._ease" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

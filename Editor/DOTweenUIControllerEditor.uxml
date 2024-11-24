@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" 
+         xmlns:uie="UnityEditor.UIElements"
+         editor-extension-mode="True">
+    
+    <Style src="DOTweenUIController.uss" />
+    
+    <ui:Template name="TweenDataControl" src="TweenDataControl.uxml" />
+    
+    <ui:VisualElement class="tween-block">
+        <ui:Label text="Options:" class="header"/>
+        <ui:Toggle binding-path="_autoplay" text="Autoplay" />
+        <ui:Toggle binding-path="_unscaledTime" text="Unscaled Time" />
+        <ui:Toggle binding-path="_finishOnStop" text="Finish on Stop/Kill" tooltip="Finishing DO NOT work with looped tweens!" />
+    </ui:VisualElement>
+    
+    <ui:Instance template="TweenDataControl" name="moveX" binding-path="_moveX" />
+    <ui:Instance template="TweenDataControl" name="moveY" binding-path="_moveY" />
+    <ui:Instance template="TweenDataControl" name="scaleX" binding-path="_scaleX" />
+    <ui:Instance template="TweenDataControl" name="scaleY" binding-path="_scaleY" />
+    <ui:Instance template="TweenDataControl" name="rotate" binding-path="_rotate" />
+    <ui:Instance template="TweenDataControl" name="color" binding-path="_color" />
+    <ui:Instance template="TweenDataControl" name="fade" binding-path="_fade" />
+</ui:UXML>

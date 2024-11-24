@@ -1,0 +1,94 @@
+/* Tween block styling */
+.tween-block {
+    border-width: 1px;
+    border-color: #555;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-bottom: 4px;
+}
+.tween-block .unity-toggle__text {
+    margin-left: 5px;
+}
+
+/* Header styling */
+.header {
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-left: 2px;
+    margin-bottom: 5px;
+}
+
+/* Header toggle styling */
+.tween-header .unity-toggle__text {
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-left: 5px;
+}
+
+/* Content container styling */
+.tween-content {
+    margin-left: 5px;
+    margin-top: 5px;
+    padding-right: 8px;
+}
+
+/* Easing block styling */
+.options-block {
+    border-width: 1px;
+    border-color: #555;
+    padding: 5px;
+    padding-right: 6px;
+    margin: 5px -8px 1px -5px;
+}
+
+/* Make curve and ease height consistent */
+.options-block .unity-base-field {
+    height: 18px;
+}
+
+/* Easing toggle styling */
+.ease-toggle {
+    -unity-font-style: bold;
+}
+
+/* Fixing inconsistent flex between Property fields and typed one */
+.tween-block .unity-base-field__label {
+    flex-basis: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 150px;
+}
+.int-field .unity-base-field__input {
+    margin-left: -12px;
+}
+.ease-toggle .unity-base-field__input {
+    margin-left: -12px;
+}
+
+/* Message box styling */
+.message-box {
+    border-width: 1px;
+    border-color: #555;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+.message-icon {
+    width: 16px;
+    height: 16px;
+    background-image: resource("icons/console.warnicon.png");
+    background-size: cover;
+    margin-right: 5px;
+    flex-shrink: 0;
+}
+.message-box-label {
+    flex-grow: 1;
+    flex-wrap: wrap;
+    overflow: hidden;
+    padding-right: 20px;
+    text-overflow: ellipsis;
+    -unity-overflow-clip-box: padding-box;
+}
