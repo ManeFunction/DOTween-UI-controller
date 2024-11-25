@@ -16,6 +16,20 @@ namespace ManeFunction.DOTweenExtensions.Editor
         {
             VisualElement root = new();
             xml.CloneTree(root);
+            
+            // Setup autoplay toggles
+            Toggle restartOnEnableToggle = root.Q<Toggle>("restartOnEnableToggle");
+            Toggle autoplayToggle = root.Q<Toggle>("autoplayToggle");
+            Toggle createOnStartToggle = root.Q<Toggle>("createOnStartToggle");
+            if (restartOnEnableToggle == null || autoplayToggle == null || createOnStartToggle == null)
+            {
+                Debug.LogError("One or more UI elements for autoplay data not found.");
+            }
+            else
+            {
+                autoplayToggle.RegisterValueChangedCallback(evt => SetMainTogglesVisibility());
+                SetMainTogglesVisibility();
+            }
 
             // Setup visibility callbacks for each tween data block
             SetupTweenData(DOTweenUIController.TweenType.MoveX, root, "moveX", "Move X");
@@ -26,13 +40,20 @@ namespace ManeFunction.DOTweenExtensions.Editor
             
             SetupTweenData(DOTweenUIController.TweenType.Fade, root, "fade", "Fade",
                 TargetHasComponent<CanvasGroup>, 
-                "GameObject must have a CanvasGroup component to use fade tweening.");
+                "GameObject should have a CanvasGroup component to use fade tweening.");
             
             SetupTweenData(DOTweenUIController.TweenType.Color, root, "color", "Color",
                 TargetHasComponent<MaskableGraphic>, 
-                "GameObject must have a MaskableGraphic component to use color tweening.");
+                "GameObject should have any MaskableGraphic component to use color tweening.");
 
             return root;
+            
+            
+            void SetMainTogglesVisibility()
+            {
+                restartOnEnableToggle.style.display = autoplayToggle.value ? DisplayStyle.Flex : DisplayStyle.None;
+                createOnStartToggle.style.display = autoplayToggle.value ? DisplayStyle.None : DisplayStyle.Flex;
+            }
         }
 
         private void SetupTweenData(DOTweenUIController.TweenType tweenType, VisualElement root,
@@ -64,6 +85,11 @@ namespace ManeFunction.DOTweenExtensions.Editor
             
             // Message box
             VisualElement messageBox = tweenDataElement.Q<VisualElement>("messageBox");
+            if (messageBox == null)
+            {
+                Debug.LogError($"VisualElement 'messageBox' not found in '{elementName}'.");
+                return;
+            }
             
             isEnableToggle.text = label;
             
@@ -73,7 +99,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
                 ((DOTweenUIController)target).SetTweenEnabled(tweenType, false);
                 isEnableToggle.SetEnabled(false);
                 Label messageLabel = messageBox.Q<Label>("messageBoxLabel");
-                messageLabel.text = optionalConditionErrorMessage;
+                messageLabel.text = messageBox.tooltip = isEnableToggle.tooltip = optionalConditionErrorMessage;
             }
             else
             {

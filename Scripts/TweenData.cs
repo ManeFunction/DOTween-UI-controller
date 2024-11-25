@@ -30,13 +30,14 @@ namespace ManeFunction.DOTweenExtensions
         }
 
         public Tween TryCreateTween(Func<Direction, T, float, Tween> createTweener,
-            bool unscaledTime, bool autoplay, float additionalDelay)
+            bool unscaledTime, bool autoplay, bool restartable, float additionalDelay)
         {
             if (!_isEnable)
                 return null;
 
             Tween tween = createTweener(_direction, _value, _duration);
             tween.SetUpdate(unscaledTime);
+            tween.SetAutoKill(!restartable && _loopCount == 0);
             _easeData.Apply(tween);
             if (!autoplay)
                 tween.Pause();

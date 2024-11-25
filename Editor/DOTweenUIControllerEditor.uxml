@@ -1,5 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" 
-         xmlns:uie="UnityEditor.UIElements"
          editor-extension-mode="True">
     
     <Style src="DOTweenUIController.uss" />
@@ -8,9 +7,12 @@
     
     <ui:VisualElement class="tween-block">
         <ui:Label text="Options:" class="header"/>
-        <ui:Toggle binding-path="_autoplay" text="Autoplay" />
-        <ui:Toggle binding-path="_unscaledTime" text="Unscaled Time" />
-        <ui:Toggle binding-path="_finishOnStop" text="Finish on Stop/Kill" tooltip="Finishing DO NOT work with looped tweens!" />
+        <ui:Toggle binding-path="_autoplay" text="Autoplay" name="autoplayToggle" tooltip="Plays tweens automatically from the Start() of this component. Otherwise use Play() to invoke animations." />
+        <ui:Toggle binding-path="_createOnStart" text="Create on Start" name="createOnStartToggle" tooltip="Pre-creates tweens on Start() for more smooth play on demand." />
+        <ui:Toggle binding-path="_restartOnEnable" text="Restart on Enable" name="restartOnEnableToggle" tooltip="Restart tweens when Disable > Enable object or component. DO NOT enable w/o needs, as it's disable tween auto-kill feature." />
+        <ui:Toggle binding-path="_pauseOnDisable" text="Pause on Disable" name="pauseOnDisableToggle" tooltip="Pause tweens on components Disable. Otherwise it keeps playing." />
+        <ui:Toggle binding-path="_finishOnStop" text="Finish on Stop/Kill" tooltip="If Tweens will be Stop()'ed from the code, place values to the end positions. Finishing DO NOT work with looped tweens!" />
+        <ui:Toggle binding-path="_unscaledTime" text="Unscaled Time" tooltip="Use unscaled delta time to prevent inconsistent behaviour or freezing when timeScale is changed." />
     </ui:VisualElement>
     
     <ui:Instance template="TweenDataControl" name="moveX" binding-path="_moveX" />

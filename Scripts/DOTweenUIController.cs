@@ -10,8 +10,11 @@ namespace ManeFunction.DOTweenExtensions
     public class DOTweenUIController : UIBehaviour
     {
         [SerializeField] private bool _autoplay = true;
-        [SerializeField] private bool _unscaledTime;
+        [SerializeField] private bool _createOnStart = true;
+        [SerializeField] private bool _restartOnEnable = true;
+        [SerializeField] private bool _pauseOnDisable = true;
         [SerializeField] private bool _finishOnStop = true;
+        [SerializeField] private bool _unscaledTime;
         
         [SerializeField] private TweenDataFloat _moveX;
         [SerializeField] private TweenDataFloat _moveY;
@@ -24,11 +27,15 @@ namespace ManeFunction.DOTweenExtensions
         [SerializeField] private TweenDataFloat _fade;
         [SerializeField] private TweenDataColor _color;
 
-        private readonly List<Tween> _activeTweens = new(5);
+        private readonly List<Tween> _activeTweens = new(7);
 
         private Lazy<RectTransform> _rectTransform;
         private Lazy<CanvasGroup> _canvasGroup;
         private Lazy<MaskableGraphic> _graphics;
+        
+        private bool _shouldRestartOnEnable;
+        
+        private bool RestartOnEnable => _autoplay && _restartOnEnable;
 
         protected override void Awake()
         {
@@ -43,7 +50,35 @@ namespace ManeFunction.DOTweenExtensions
         {
             base.Start();
 
-            CreateTweeners();
+            if (_autoplay || _createOnStart)
+                CreateTweeners();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            
+            if (_shouldRestartOnEnable)
+                Restart();
+            else if (_pauseOnDisable)
+                PlayTweens();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            
+            _shouldRestartOnEnable = RestartOnEnable;
+            
+            if (_pauseOnDisable)
+                Pause();
+        }
+
+        protected override void OnDestroy()
+        {
+            Stop();
+
+            base.OnDestroy();
         }
 
         public void SetTweenEnabled(TweenType tweenType, bool isEnabled)
@@ -93,7 +128,7 @@ namespace ManeFunction.DOTweenExtensions
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, additionalDelay);
+            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
             if (moveXTween != null) _activeTweens.Add(moveXTween);
 
             Tween moveYTween = _moveY.TryCreateTween((direction, value, duration) =>
@@ -113,7 +148,7 @@ namespace ManeFunction.DOTweenExtensions
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, additionalDelay);
+            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
             if (moveYTween != null) _activeTweens.Add(moveYTween);
 
             Tween scaleXTween = _scaleX.TryCreateTween((direction, value, duration) =>
@@ -134,7 +169,7 @@ namespace ManeFunction.DOTweenExtensions
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, additionalDelay);
+            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
             if (scaleXTween != null) _activeTweens.Add(scaleXTween);
 
             Tween scaleYTween = _scaleY.TryCreateTween((direction, value, duration) =>
@@ -155,7 +190,7 @@ namespace ManeFunction.DOTweenExtensions
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, additionalDelay);
+            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
             if (scaleYTween != null) _activeTweens.Add(scaleYTween);
 
             Tween rotateTween = _rotate.TryCreateTween((direction, value, duration) =>
@@ -178,7 +213,7 @@ namespace ManeFunction.DOTweenExtensions
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, additionalDelay);
+            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
             if (rotateTween != null) _activeTweens.Add(rotateTween);
             
             Tween fadeTween = _fade.TryCreateTween((direction, value, duration) =>
@@ -196,7 +231,7 @@ namespace ManeFunction.DOTweenExtensions
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, additionalDelay);
+            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
             if (fadeTween != null) _activeTweens.Add(fadeTween);
             
             Tween colorTween = _color.TryCreateTween((direction, value, duration) =>
@@ -214,7 +249,7 @@ namespace ManeFunction.DOTweenExtensions
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, additionalDelay);
+            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
             if (colorTween != null) _activeTweens.Add(colorTween);
         }
         
@@ -224,8 +259,7 @@ namespace ManeFunction.DOTweenExtensions
             if (_activeTweens.Count == 0)
                 CreateTweeners(delay);
             
-            foreach (Tween tween in _activeTweens)
-                tween.Play();
+            PlayTweens();
         }
 
         [ContextMenu("Pause")]
@@ -244,11 +278,20 @@ namespace ManeFunction.DOTweenExtensions
             _activeTweens.Clear();
         }
 
-        protected override void OnDestroy()
+        [ContextMenu("Restart")]
+        public void Restart()
         {
-            Stop();
-
-            base.OnDestroy();
+            if (_activeTweens.Count == 0)
+                Play();
+            else
+                foreach (Tween tween in _activeTweens)
+                    tween.Restart();
+        }
+        
+        private void PlayTweens()
+        {
+            foreach (Tween tween in _activeTweens)
+                tween.Play();
         }
         
         public enum TweenType
