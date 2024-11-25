@@ -7,9 +7,9 @@ namespace ManeFunction.DOTweenExtensions
     [Serializable]
     internal class EaseData
     {
-        [SerializeField] private bool _useCurve = true;
-        [SerializeField] private AnimationCurve _curve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
-        [SerializeField] private Ease _ease = Ease.Linear;
+        [SerializeField] private bool _useCurve;
+        [SerializeField] private AnimationCurve _curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+        [SerializeField] private Ease _ease = Ease.InOutSine;
 
         public void Apply(Tween tween)
         {
