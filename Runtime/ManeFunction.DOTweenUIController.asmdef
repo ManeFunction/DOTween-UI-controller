@@ -1,0 +1,16 @@
+{
+    "name": "ManeFunction.DOTween",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2597241676abd0544b8e4bbd0b470f35"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
