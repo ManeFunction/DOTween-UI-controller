@@ -253,7 +253,6 @@ namespace ManeFunction.DOTweenExtensions
             if (colorTween != null) _activeTweens.Add(colorTween);
         }
         
-        [ContextMenu("Play")]
         public void Play(float delay = 0f)
         {
             if (_activeTweens.Count == 0)
@@ -262,14 +261,12 @@ namespace ManeFunction.DOTweenExtensions
             PlayTweens();
         }
 
-        [ContextMenu("Pause")]
         public void Pause()
         {
             foreach (Tween tween in _activeTweens)
                 tween.Pause();
         }
 
-        [ContextMenu("Stop")]
         public void Stop()
         {
             foreach (Tween tween in _activeTweens)
@@ -278,7 +275,6 @@ namespace ManeFunction.DOTweenExtensions
             _activeTweens.Clear();
         }
 
-        [ContextMenu("Restart")]
         public void Restart()
         {
             if (_activeTweens.Count == 0)
