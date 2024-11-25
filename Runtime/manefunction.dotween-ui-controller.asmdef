@@ -2,7 +2,7 @@
     "name": "manefunction.dotween-ui-controller",
     "rootNamespace": "",
     "references": [
-        "GUID:2597241676abd0544b8e4bbd0b470f35"
+        "DOTween.Modules"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
