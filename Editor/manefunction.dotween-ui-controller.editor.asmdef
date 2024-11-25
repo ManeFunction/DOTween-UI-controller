@@ -1,10 +1,12 @@
 {
-    "name": "ManeFunction.DOTween",
+    "name": "manefunction.dotween-ui-controller.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:2597241676abd0544b8e4bbd0b470f35"
+        "GUID:50bf2f3e6dfbd4ee9af1bbf77ae11920"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
