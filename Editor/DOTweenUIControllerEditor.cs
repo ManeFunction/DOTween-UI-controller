@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UIElements.Button;
 using Toggle = UnityEngine.UIElements.Toggle;
 
 namespace ManeFunction.DOTweenExtensions.Editor
@@ -140,6 +141,17 @@ namespace ManeFunction.DOTweenExtensions.Editor
             UpdateEaseFields();
 
             useCurveToggle.RegisterValueChangedCallback(evt => { UpdateEaseFields(); });
+            
+            // Play Test button
+            Button replayButton = root.Q<Button>("replayButton");
+            if (replayButton == null)
+            {
+                Debug.LogError("Re-Play button not found.");
+                return;
+            }
+            
+            replayButton.clicked += () => ((DOTweenUIController)target).Restart();
+            replayButton.style.display = Application.isPlaying ? DisplayStyle.Flex : DisplayStyle.None;
             
             return;
             

@@ -92,3 +92,21 @@
     text-overflow: ellipsis;
     -unity-overflow-clip-box: padding-box;
 }
+
+/* Button styling */
+.button {
+    margin: 5px 0 0;
+    padding: 5px;
+    border-width: 1px;
+    border-color: #555;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+.button:hover {
+    background-color: #444;
+}
+.button:active {
+    background-color: #555;
+}

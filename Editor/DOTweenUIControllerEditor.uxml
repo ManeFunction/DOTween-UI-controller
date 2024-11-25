@@ -22,4 +22,6 @@
     <ui:Instance template="TweenDataControl" name="rotate" binding-path="_rotate" />
     <ui:Instance template="TweenDataControl" name="color" binding-path="_color" />
     <ui:Instance template="TweenDataControl" name="fade" binding-path="_fade" />
+    
+    <ui:Button name="replayButton" text="Re-Play" class="button" />
 </ui:UXML>
