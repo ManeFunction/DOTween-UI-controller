@@ -1,10 +1,10 @@
 {
   "name": "com.manefunction.dotween-ui-controller",
-  "version": "0.9.1-preview",
+  "version": "1.0.0-preview.1",
   "displayName": "DOTween UI Controller",
   "description": "Neat Unity controller component to set up UI DOTween animations without any code. DOTween Pro is not required, but supported!",
-  "unity": "2022.1",
-  "unityRelease": "0b5",
+  "unity": "2021.2",
+  "unityRelease": "0f1",
   "keywords": [
     "unity",
     "utils",

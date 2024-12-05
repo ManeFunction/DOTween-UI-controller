@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -15,7 +16,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
         
         public override VisualElement CreateInspectorGUI()
         {
-            VisualElement root = new();
+            VisualElement root = new VisualElement();
             xml.CloneTree(root);
             
             // Setup autoplay toggles
