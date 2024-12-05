@@ -16,7 +16,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
         
         public override VisualElement CreateInspectorGUI()
         {
-            VisualElement root = new VisualElement();
+            VisualElement root = new();
             xml.CloneTree(root);
             
             // Setup autoplay toggles

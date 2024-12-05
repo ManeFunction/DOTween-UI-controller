@@ -27,7 +27,7 @@ namespace ManeFunction.DOTweenExtensions
         [SerializeField] private TweenDataFloat _fade;
         [SerializeField] private TweenDataColor _color;
 
-        private readonly List<Tween> _activeTweens = new List<Tween>(7);
+        private readonly List<Tween> _activeTweens = new(7);
 
         private Lazy<RectTransform> _rectTransform;
         private Lazy<CanvasGroup> _canvasGroup;
