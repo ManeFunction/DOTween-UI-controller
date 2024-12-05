@@ -1,0 +1,4 @@
+/* Fixed an issue with different Property Field and other typed fields layout in Unity 2022.2+ and earlier versions */
+.typed-field .unity-base-field__input {
+    margin-left: 12px;
+}

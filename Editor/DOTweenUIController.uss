@@ -47,11 +47,6 @@
     height: 18px;
 }
 
-/* Easing toggle styling */
-.ease-toggle {
-    -unity-font-style: bold;
-}
-
 /* Fixing inconsistent flex between Property fields and typed one */
 .tween-block .unity-base-field__label {
     flex-basis: 0;
@@ -59,11 +54,8 @@
     flex-shrink: 0;
     width: 150px;
 }
-.int-field .unity-base-field__input {
-    margin-left: -12px;
-}
-.ease-toggle .unity-base-field__input {
-    margin-left: -12px;
+.unity-property-field .unity-base-field__input {
+    margin-left: 12px;
 }
 
 /* Message box styling */

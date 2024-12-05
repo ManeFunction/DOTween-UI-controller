@@ -14,14 +14,14 @@
             <uie:PropertyField label="Value" binding-path="_value" />
             <uie:PropertyField label="Duration" binding-path="_duration" />
             <ui:VisualElement class="options-block">
-                <uie:IntegerField label="Loop Count" binding-path="_loopCount" name="loopCountField" class="int-field" tooltip="Use -1 for infinite looping." />
+                <uie:IntegerField label="Loop Count" binding-path="_loopCount" name="loopCountField" class="typed-field" tooltip="Use -1 for infinite looping." />
                 <ui:VisualElement name="loopOptions" >
                     <uie:PropertyField label="Delay Between" binding-path="_delayBetweenLoops" />
                     <uie:PropertyField label="Loop Type" binding-path="_loopType" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement class="options-block">
-                <ui:Toggle name="useCurveToggle" label="Use Curve" binding-path="_easeData._useCurve" class="ease-toggle" />
+                <ui:Toggle name="useCurveToggle" label="Use Curve" binding-path="_easeData._useCurve" class="typed-field" />
                 <uie:PropertyField name="curveField" label="Curve" binding-path="_easeData._curve" />
                 <uie:PropertyField name="easeField" label="Ease" binding-path="_easeData._ease" />
             </ui:VisualElement>
