@@ -80,7 +80,6 @@
     width: 16px;
     height: 16px;
     background-image: resource("icons/console.warnicon.png");
-    background-size: cover;
     margin-right: 5px;
     flex-shrink: 0;
 }
