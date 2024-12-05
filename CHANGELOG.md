@@ -14,5 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Fixed CHANGELOG.md formatting.
 
 ## 0.9.1-preview
+### Fixed
+- Replaced DOTween dependency from GUID to string linking, as it is more flexible.
+
+## 0.9.0-preview
 ### Added
 - Initial release of the tool.
