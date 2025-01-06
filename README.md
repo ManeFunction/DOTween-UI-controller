@@ -4,9 +4,8 @@ Neat Unity controller component to set up UI `DOTween` animations without any co
 
 # Features
 
-1. Seven pre-configured tweens for all essential UI animation operations: **Move** (X/Y), **Scale** (X/Y), 
-**Rotate** (Z only), **Color** (for Images and other MaskableGraphic), and **Fade** 
-(for alpha property of CanvasGroup).
+1. Seven pre-configured tweens for all essential UI animation operations: **Move** (X/Y), **Scale** (X/Y), **Rotate**
+(Z only), **Color** (for Images and other MaskableGraphic), and **Fade** (for alpha property of CanvasGroup).
 1. A powerful inspector built with the `UI Toolkit`, designed to optimize editor rendering performance.
 1. Lazy initialization of required components to streamline the workflow and enhance efficiency.
 1. Flexible Unity lifecycle integration, allowing tweens to, for example, pause on `OnDisable()` 
