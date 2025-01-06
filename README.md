@@ -57,3 +57,7 @@ and there’s a good chance it’s already installed on your machine.
 This controller is made to work with [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), a tweening library created and copyrighted by [Daniele Giardini](http://blog.demigiant.com).  
 `DOTween` is not created, owned, or maintained by me, and all rights to `DOTween` belong to its respective author.  
 For more information about `DOTween`, including licensing and terms of use, please visit the [official website](http://dotween.demigiant.com/).
+
+[![openupm](https://img.shields.io/npm/v/com.manefunction.dotween-ui-controller?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.manefunction.dotween-ui-controller/)
+[![openupm](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=downloads&query=%24.downloads&suffix=%2Fmonth&url=https%3A%2F%2Fpackage.openupm.com%2Fdownloads%2Fpoint%2Flast-month%2Fcom.manefunction.dotween-ui-controller)](https://openupm.com/packages/com.manefunction.dotween-ui-controller/)
+![GitHub last commit](https://img.shields.io/github/last-commit/ManeFunction/DOTween-UI-controller)
