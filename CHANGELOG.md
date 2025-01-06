@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] - 2025-06-01
+### Fixed
+- Fixed missing `com.unity.ugui` dependency in the package manifest. Not critical, but it's better to have it.
+
 ## [1.0.0] - 2025-06-01
 ### Added
 - Added installation instructions to the `README.md`.
