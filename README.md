@@ -1,7 +1,9 @@
 # DOTween UI controller
+
 Neat Unity controller component to set up UI `DOTween` animations without any code. `DOTween Pro` is not required, but supported!
 
 # Features
+
 1. Seven pre-configured tweens for all essential UI animation operations: **Move** (X/Y), **Scale** (X/Y), 
 **Rotate** (Z only), **Color** (for Images and other MaskableGraphic), and **Fade** 
 (for alpha property of CanvasGroup).
@@ -18,9 +20,11 @@ or be reused and replayed on `OnEnable()`.
 relaunching your game (available only in `Play mode` due to `DOTween` limitations).
 
 # Look
+
 ![](https://raw.githubusercontent.com/wiki/ManeFunction/DOTween-UI-controller/main.png)
 
 # Installation
+
 I recommend using the `OpenUPM` package manager to install this package because it’s easy to manage dependencies 
 and updates that way. However, if you prefer not to use `OpenUPM` or are unable to do so, you can simply follow 
 the first step below and then place the downloaded package anywhere in your project.
@@ -31,6 +35,8 @@ with package management, such as dependency resolution and updates, right from U
 
 For CL operations on Windows, I recommend using `Git Bash` (`MINGW`) because it provides a Unix-like environment 
 and there’s a good chance it’s already installed on your machine.
+
+![](https://raw.githubusercontent.com/wiki/ManeFunction/DOTween-UI-controller/asmdef.png)
 
 1. Prepare your `DOTween` package to be used by other tools:
    - Open `Tools -> Demigiant -> DOTween Utility Panel`.
@@ -48,6 +54,7 @@ and there’s a good chance it’s already installed on your machine.
    - Switch back to `Unity` and wait for the package to finish installing.
 
 # Disclaimer
+
 This controller is made to work with [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), a tweening library created and copyrighted by [Daniele Giardini](http://blog.demigiant.com).  
 `DOTween` is not created, owned, or maintained by me, and all rights to `DOTween` belong to its respective author.  
 For more information about `DOTween`, including licensing and terms of use, please visit the [official website](http://dotween.demigiant.com/).
