@@ -22,6 +22,12 @@
     <ui:Instance template="TweenDataControl" name="rotate" binding-path="_rotate" />
     <ui:Instance template="TweenDataControl" name="color" binding-path="_color" />
     <ui:Instance template="TweenDataControl" name="fade" binding-path="_fade" />
-    
-    <ui:Button name="replayButton" text="Re-Play" class="button" />
+
+    <ui:VisualElement class="buttons-row">
+        <ui:Button name="playButton" class="button play-button" tooltip="Play" />
+        <ui:Button name="playBackwardsButton" class="button play-backwards-button" tooltip="Play Backwards" />
+        <ui:Button name="stopButton" class="button stop-button" tooltip="Stop" />
+        <ui:Button name="rewindButton" class="button rewind-button" tooltip="Rewind" />
+        <ui:Button name="recreateButton" class="button recreate-button" tooltip="Re-Create" />
+    </ui:VisualElement>
 </ui:UXML>

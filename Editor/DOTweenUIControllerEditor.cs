@@ -154,19 +154,28 @@ namespace ManeFunction.DOTweenExtensions.Editor
 
             useCurveToggle.RegisterValueChangedCallback(evt => { UpdateEaseFields(); });
             
-            // Play Test button
-            Button replayButton = root.Q<Button>("replayButton");
-            if (replayButton == null)
-            {
-                Debug.LogError("Re-Play button not found.");
-                return;
-            }
-            
-            replayButton.clicked += () => ((DOTweenUIController)target).Restart();
-            replayButton.style.display = Application.isPlaying ? DisplayStyle.Flex : DisplayStyle.None;
-            
+            // Editor Play buttons
+            InitButton("playButton", () => ((DOTweenUIController)target).Restart());
+            InitButton("playBackwardsButton", () => ((DOTweenUIController)target).RestartBackwards());
+            InitButton("stopButton", () => ((DOTweenUIController)target).Stop());
+            InitButton("rewindButton", () => ((DOTweenUIController)target).Rewind());
+            InitButton("recreateButton", () => ((DOTweenUIController)target).UndoAndDispose());
+
             return;
             
+
+            void InitButton(string buttonName, Action action)
+            {
+                Button button = root.Q<Button>(buttonName);
+                if (button == null)
+                {
+                    Debug.LogError($"{buttonName} button not found.");
+                    return;
+                }
+                
+                button.clicked += action;
+                button.style.display = Application.isPlaying ? DisplayStyle.Flex : DisplayStyle.None;
+            }
 
             void UpdateContentVisibility()
             {

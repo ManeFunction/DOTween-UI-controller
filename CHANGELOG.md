@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2025-04-02
+### Added
+- Added PlayBackwards() method (and Editor button).
+- Added RestartBackwards() method (and Editor button).
+- Added Rewind() method (and Editor button).
+- Added UndoAndDispose() method.
+
+### Changed
+- Changed view of Editor buttons. Become more compact and less intrusive. Tooltips added.
+
+### Fixed
+- Fixed an issue that you could not change animation parameters in the Play mode. Added a special button to recreate tweens.
+
 ## [1.0.1] - 2025-06-01
 ### Fixed
 - Fixed missing `com.unity.ugui` dependency in the package manifest. Not critical, but it's better to have it.

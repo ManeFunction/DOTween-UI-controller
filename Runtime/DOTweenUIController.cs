@@ -76,7 +76,7 @@ namespace ManeFunction.DOTweenExtensions
 
         protected override void OnDestroy()
         {
-            Stop();
+            StopAndDispose();
 
             base.OnDestroy();
         }
@@ -255,10 +255,14 @@ namespace ManeFunction.DOTweenExtensions
         
         public void Play(float delay = 0f)
         {
-            if (_activeTweens.Count == 0)
-                CreateTweeners(delay);
-            
+            CreateTweens(delay);
             PlayTweens();
+        }
+
+        public void PlayBackwards(float delay = 0f)
+        {
+            CreateTweens(delay);
+            PlayTweensBackwards();
         }
 
         public void Pause()
@@ -270,8 +274,30 @@ namespace ManeFunction.DOTweenExtensions
         public void Stop()
         {
             foreach (Tween tween in _activeTweens)
+            {
+                if (_finishOnStop)
+                    tween.Complete();
+                else
+                    tween.Pause();
+            }
+        }
+
+        public void StopAndDispose()
+        {
+            foreach (Tween tween in _activeTweens)
                 tween.Kill(_finishOnStop);
             
+            _activeTweens.Clear();
+        }
+
+        public void UndoAndDispose()
+        {
+            foreach (Tween tween in _activeTweens)
+            {
+                tween.Rewind();
+                tween.Kill();
+            }
+
             _activeTweens.Clear();
         }
 
@@ -283,11 +309,41 @@ namespace ManeFunction.DOTweenExtensions
                 foreach (Tween tween in _activeTweens)
                     tween.Restart();
         }
+
+        public void RestartBackwards()
+        {
+            if (_activeTweens.Count == 0)
+                PlayBackwards();
+            else
+                foreach (Tween tween in _activeTweens)
+                {
+                    tween.Complete();
+                    tween.PlayBackwards();
+                }
+        }
+
+        public void Rewind()
+        {
+            foreach (Tween tween in _activeTweens)
+                tween.Rewind();
+        }
+
+        private void CreateTweens(float delay = 0f)
+        {
+            if (_activeTweens.Count == 0)
+                CreateTweeners(delay);
+        }
         
         private void PlayTweens()
         {
             foreach (Tween tween in _activeTweens)
                 tween.Play();
+        }
+
+        private void PlayTweensBackwards()
+        {
+            foreach (Tween tween in _activeTweens)
+                tween.PlayBackwards();
         }
         
         public enum TweenType
