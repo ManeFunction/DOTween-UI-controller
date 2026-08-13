@@ -255,13 +255,13 @@ namespace ManeFunction.DOTweenExtensions
         
         public void Play(float delay = 0f)
         {
-            CreateTweens(delay);
+            TryCreateTweens(delay);
             PlayTweens();
         }
 
         public void PlayBackwards(float delay = 0f)
         {
-            CreateTweens(delay);
+            TryCreateTweens(delay);
             PlayTweensBackwards();
         }
 
@@ -328,7 +328,7 @@ namespace ManeFunction.DOTweenExtensions
                 tween.Rewind();
         }
 
-        private void CreateTweens(float delay = 0f)
+        private void TryCreateTweens(float delay = 0f)
         {
             if (_activeTweens.Count == 0)
                 CreateTweeners(delay);

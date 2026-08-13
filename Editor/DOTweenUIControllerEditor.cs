@@ -40,7 +40,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
             }
             else
             {
-                autoplayToggle.RegisterValueChangedCallback(evt => SetMainTogglesVisibility());
+                autoplayToggle.RegisterValueChangedCallback(_ => SetMainTogglesVisibility());
                 SetMainTogglesVisibility();
             }
 
@@ -125,7 +125,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
             // Initialize base visibility
             UpdateContentVisibility();
 
-            isEnableToggle.RegisterValueChangedCallback(evt => { UpdateContentVisibility(); });
+            isEnableToggle.RegisterValueChangedCallback(_ => { UpdateContentVisibility(); });
             
             // Handle looping value
             IntegerField loopField = contentContainer.Q<IntegerField>("loopCountField");
@@ -139,7 +139,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
             // Initialize loop type visibility
             UpdateLoopField();
             
-            loopField.RegisterValueChangedCallback(evt => { UpdateLoopField(); });
+            loopField.RegisterValueChangedCallback(_ => { UpdateLoopField(); });
 
             // Handle useCurveToggle
             Toggle useCurveToggle = contentContainer.Q<Toggle>("useCurveToggle");
@@ -155,7 +155,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
             // Initialize easing fields visibility
             UpdateEaseFields();
 
-            useCurveToggle.RegisterValueChangedCallback(evt => { UpdateEaseFields(); });
+            useCurveToggle.RegisterValueChangedCallback(_ => { UpdateEaseFields(); });
 
             return;
 
