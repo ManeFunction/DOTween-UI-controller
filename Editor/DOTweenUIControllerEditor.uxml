@@ -25,9 +25,9 @@
 
     <ui:VisualElement class="buttons-row">
         <ui:Button name="playButton" class="button play-button" tooltip="Play" />
-        <ui:Button name="playBackwardsButton" class="button play-backwards-button" tooltip="Play Backwards" />
+        <ui:Button name="playBackwardsButton" class="button play-backwards-button" tooltip="Play backwards" />
         <ui:Button name="stopButton" class="button stop-button" tooltip="Stop" />
-        <ui:Button name="rewindButton" class="button rewind-button" tooltip="Rewind" />
-        <ui:Button name="recreateButton" class="button recreate-button" tooltip="Re-Create" />
+        <ui:Button name="rewindButton" class="button rewind-button" tooltip="Reset to initial" />
+        <ui:Button name="recreateButton" class="button recreate-button" tooltip="Recreate" />
     </ui:VisualElement>
 </ui:UXML>

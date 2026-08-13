@@ -59,6 +59,9 @@ namespace ManeFunction.DOTweenExtensions.Editor
                 TargetHasComponent<MaskableGraphic>, 
                 "GameObject should have any MaskableGraphic component to use color tweening.");
 
+            // Play-mode-only controls: built-in VisualElement.tooltip is suppressed in Play Mode
+            SetupEditorButtons(root);
+
             return root;
             
             
@@ -153,29 +156,8 @@ namespace ManeFunction.DOTweenExtensions.Editor
             UpdateEaseFields();
 
             useCurveToggle.RegisterValueChangedCallback(evt => { UpdateEaseFields(); });
-            
-            // Editor Play buttons
-            InitButton("playButton", () => ((DOTweenUIController)target).Restart());
-            InitButton("playBackwardsButton", () => ((DOTweenUIController)target).RestartBackwards());
-            InitButton("stopButton", () => ((DOTweenUIController)target).Stop());
-            InitButton("rewindButton", () => ((DOTweenUIController)target).Rewind());
-            InitButton("recreateButton", () => ((DOTweenUIController)target).UndoAndDispose());
 
             return;
-            
-
-            void InitButton(string buttonName, Action action)
-            {
-                Button button = root.Q<Button>(buttonName);
-                if (button == null)
-                {
-                    Debug.LogError($"{buttonName} button not found.");
-                    return;
-                }
-                
-                button.clicked += action;
-                button.style.display = Application.isPlaying ? DisplayStyle.Flex : DisplayStyle.None;
-            }
 
             void UpdateContentVisibility()
             {
@@ -198,6 +180,84 @@ namespace ManeFunction.DOTweenExtensions.Editor
             }
         }
             
+        private void SetupEditorButtons(VisualElement root)
+        {
+            VisualElement buttonsRow = root.Q<VisualElement>(className: "buttons-row");
+            if (buttonsRow == null)
+            {
+                Debug.LogError("Buttons row not found.");
+                return;
+            }
+
+            bool showButtons = Application.isPlaying;
+            buttonsRow.style.display = showButtons ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!showButtons)
+                return;
+
+            InitButton(root, "playButton", () => ((DOTweenUIController)target).Restart());
+            InitButton(root, "playBackwardsButton", () => ((DOTweenUIController)target).RestartBackwards());
+            InitButton(root, "stopButton", () => ((DOTweenUIController)target).Stop());
+            InitButton(root, "rewindButton", () => ((DOTweenUIController)target).Rewind());
+            InitButton(root, "recreateButton", () => ((DOTweenUIController)target).UndoAndDispose());
+
+            // Custom tooltips: Unity suppresses VisualElement.tooltip while playing
+            Label tip = new() { pickingMode = PickingMode.Ignore };
+            tip.AddToClassList("button-tooltip");
+            tip.style.display = DisplayStyle.None;
+            root.Add(tip);
+
+            IVisualElementScheduledItem showTip = null;
+            Button hoveredButton = null;
+
+            tip.RegisterCallback<GeometryChangedEvent>(_ =>
+            {
+                if (hoveredButton == null || tip.style.display == DisplayStyle.None)
+                    return;
+
+                Rect buttonBounds = hoveredButton.worldBound;
+                Rect rootBounds = root.worldBound;
+                tip.style.left = buttonBounds.center.x - rootBounds.xMin - tip.resolvedStyle.width * .5f;
+                tip.style.top = buttonBounds.yMin - rootBounds.yMin - tip.resolvedStyle.height - 2f;
+            });
+
+            foreach (Button button in buttonsRow.Query<Button>().ToList())
+            {
+                button.RegisterCallback<PointerEnterEvent>(_ =>
+                {
+                    showTip?.Pause();
+                    hoveredButton = button;
+                    showTip = root.schedule.Execute(() =>
+                    {
+                        if (hoveredButton == null || string.IsNullOrEmpty(hoveredButton.tooltip))
+                            return;
+
+                        tip.text = hoveredButton.tooltip;
+                        tip.style.display = DisplayStyle.Flex;
+                        tip.BringToFront();
+                    }).StartingIn(400);
+                });
+
+                button.RegisterCallback<PointerLeaveEvent>(_ =>
+                {
+                    showTip?.Pause();
+                    hoveredButton = null;
+                    tip.style.display = DisplayStyle.None;
+                });
+            }
+        }
+
+        private static void InitButton(VisualElement root, string buttonName, Action action)
+        {
+            Button button = root.Q<Button>(buttonName);
+            if (button == null)
+            {
+                Debug.LogError($"{buttonName} button not found.");
+                return;
+            }
+
+            button.clicked += action;
+        }
+
         private bool TargetHasComponent<T>() where T : Component => 
             ((DOTweenUIController)target).GetComponent<T>() != null;
     }
