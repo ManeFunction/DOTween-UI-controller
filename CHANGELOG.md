@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 - Added RectTransform checks for all transform related tweens.
 - Added "Add" button to all warnings that indicates missing components.
+- Added Loop Count field now renders an explicit "infinity" label instead of just "-1" indicator.
 
 ### Changed
 - Removed editor fixes that was applied for the earlier versions of `UI Toolkit` (Unity 2022.2).

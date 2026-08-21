@@ -100,7 +100,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
                 isEnableToggle.SetEnabled(false);
                 Label messageLabel = messageBox.Q<Label>("messageBoxLabel");
                 messageLabel.text = messageBox.tooltip = isEnableToggle.tooltip =
-                    $"{requiredComponent.Name} required.";
+                    $"'{requiredComponent.Name}' is required";
 
                 if (addComponentButton == null)
                 {
