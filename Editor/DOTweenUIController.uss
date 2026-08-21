@@ -65,7 +65,7 @@
     padding: 5px;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 5px;
 }
 .message-icon {
@@ -79,9 +79,27 @@
     flex-grow: 1;
     flex-wrap: wrap;
     overflow: hidden;
-    padding-right: 20px;
+    padding-right: 8px;
     text-overflow: ellipsis;
     -unity-overflow-clip-box: padding-box;
+}
+.add-component-button {
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 18px;
+    margin: 0;
+    padding: 0 6px;
+    border-width: 1px;
+    border-color: #555;
+    background-color: #333;
+    color: #fff;
+    font-size: 11px;
+}
+.add-component-button:hover {
+    background-color: #444;
+}
+.add-component-button:active {
+    background-color: #555;
 }
 
 /* Button styling */

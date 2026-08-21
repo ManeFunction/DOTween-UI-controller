@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
+using Image = UnityEngine.UI.Image;
 using Toggle = UnityEngine.UIElements.Toggle;
 
 namespace ManeFunction.DOTweenExtensions.Editor
@@ -33,19 +34,13 @@ namespace ManeFunction.DOTweenExtensions.Editor
             }
 
             // Setup visibility callbacks for each tween data block
-            SetupTweenData(DOTweenUIController.TweenType.MoveX, root, "moveX", "Move X");
-            SetupTweenData(DOTweenUIController.TweenType.MoveY, root, "moveY", "Move Y");
-            SetupTweenData(DOTweenUIController.TweenType.ScaleX, root, "scaleX", "Scale X");
-            SetupTweenData(DOTweenUIController.TweenType.ScaleY, root, "scaleY", "Scale Y");
-            SetupTweenData(DOTweenUIController.TweenType.Rotate, root, "rotate", "Rotate Z");
-            
-            SetupTweenData(DOTweenUIController.TweenType.Fade, root, "fade", "Fade",
-                TargetHasComponent<CanvasGroup>, 
-                "GameObject should have a CanvasGroup component to use fade tweening.");
-            
-            SetupTweenData(DOTweenUIController.TweenType.Color, root, "color", "Color",
-                TargetHasComponent<MaskableGraphic>, 
-                "GameObject should have any MaskableGraphic component to use color tweening.");
+            SetupTweenData(DOTweenUIController.TweenType.MoveX, root, "moveX", "Move X", typeof(RectTransform));
+            SetupTweenData(DOTweenUIController.TweenType.MoveY, root, "moveY", "Move Y", typeof(RectTransform));
+            SetupTweenData(DOTweenUIController.TweenType.ScaleX, root, "scaleX", "Scale X", typeof(RectTransform));
+            SetupTweenData(DOTweenUIController.TweenType.ScaleY, root, "scaleY", "Scale Y", typeof(RectTransform));
+            SetupTweenData(DOTweenUIController.TweenType.Rotate, root, "rotate", "Rotate Z", typeof(RectTransform));
+            SetupTweenData(DOTweenUIController.TweenType.Fade, root, "fade", "Fade", typeof(CanvasGroup));
+            SetupTweenData(DOTweenUIController.TweenType.Color, root, "color", "Color", typeof(MaskableGraphic));
 
             // Play-mode-only controls: built-in VisualElement.tooltip is suppressed in Play Mode
             SetupEditorButtons(root);
@@ -61,8 +56,7 @@ namespace ManeFunction.DOTweenExtensions.Editor
         }
 
         private void SetupTweenData(DOTweenUIController.TweenType tweenType, VisualElement root,
-            string elementName, string label, Func<bool> optionalCondition = null,
-            string optionalConditionErrorMessage = "")
+            string elementName, string label, Type requiredComponent = null)
         {
             VisualElement tweenDataElement = root.Q<VisualElement>(elementName);
             if (tweenDataElement == null)
@@ -97,13 +91,36 @@ namespace ManeFunction.DOTweenExtensions.Editor
             
             isEnableToggle.text = label;
             
-            // Optional condition
-            if (optionalCondition != null && !optionalCondition())
+            // Required component
+            Button addComponentButton = messageBox.Q<Button>("addComponentButton");
+            Type componentToAdd = GetAddableComponentType(requiredComponent);
+            if (requiredComponent != null && !TargetHasComponent(requiredComponent))
             {
                 ((DOTweenUIController)target).SetTweenEnabled(tweenType, false);
                 isEnableToggle.SetEnabled(false);
                 Label messageLabel = messageBox.Q<Label>("messageBoxLabel");
-                messageLabel.text = messageBox.tooltip = isEnableToggle.tooltip = optionalConditionErrorMessage;
+                messageLabel.text = messageBox.tooltip = isEnableToggle.tooltip =
+                    $"{requiredComponent.Name} required.";
+
+                if (addComponentButton == null)
+                {
+                    Debug.LogError($"Button 'addComponentButton' not found in '{elementName}'.");
+                }
+                else if (componentToAdd == null)
+                {
+                    addComponentButton.style.display = DisplayStyle.None;
+                }
+                else
+                {
+                    addComponentButton.clicked += () =>
+                    {
+                        GameObject gameObject = ((DOTweenUIController)target).gameObject;
+                        if (gameObject.GetComponent(requiredComponent) != null)
+                            return;
+
+                        Undo.AddComponent(gameObject, componentToAdd);
+                    };
+                }
             }
             else
             {
@@ -246,7 +263,19 @@ namespace ManeFunction.DOTweenExtensions.Editor
             button.clicked += action;
         }
 
-        private bool TargetHasComponent<T>() where T : Component => 
-            ((DOTweenUIController)target).GetComponent<T>() != null;
+        private bool TargetHasComponent(Type componentType) => 
+            ((DOTweenUIController)target).GetComponent(componentType) != null;
+
+        private static Type GetAddableComponentType(Type requiredComponent)
+        {
+            if (requiredComponent == null || !typeof(Component).IsAssignableFrom(requiredComponent))
+                return null;
+            if (!requiredComponent.IsAbstract)
+                return requiredComponent;
+            if (requiredComponent == typeof(MaskableGraphic))
+                return typeof(Image);
+
+            return null;
+        }
     }
 }

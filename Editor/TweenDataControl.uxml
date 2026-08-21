@@ -6,6 +6,7 @@
         <ui:VisualElement name="messageBox" class="message-box" >
             <ui:Image name="messageIcon" class="message-icon" />
             <ui:Label text="" name="messageBoxLabel" class="message-box-label" />
+            <ui:Button name="addComponentButton" text="Add" class="add-component-button" tooltip="Add" />
         </ui:VisualElement>
         <ui:Toggle name="isEnableToggle" binding-path="_isEnable" text="Is Enabled" class="tween-header" />
         <ui:VisualElement name="contentContainer" class="tween-content">
