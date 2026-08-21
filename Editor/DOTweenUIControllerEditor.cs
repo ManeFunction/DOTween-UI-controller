@@ -1,6 +1,5 @@
 using System;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -18,17 +17,6 @@ namespace ManeFunction.DOTweenExtensions.Editor
         {
             VisualElement root = new();
             xml.CloneTree(root);
-            
-            // Force update the bindings to get the latest values (Unity 2022.2- fix)
-            SerializedObject so = new(target);
-            root.Bind(so);
-            
-            // Fixed an issue with different fields layout before and after Unity 2022.2
-#if !UNITY_2022_2_OR_NEWER
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.manefunction.dotween-ui-controller/Editor/LegacyLayoutFix.uss");
-            if (styleSheet != null)
-                root.styleSheets.Add(styleSheet);
-#endif
             
             // Setup autoplay toggles
             Toggle restartOnEnableToggle = root.Q<Toggle>("restartOnEnableToggle");

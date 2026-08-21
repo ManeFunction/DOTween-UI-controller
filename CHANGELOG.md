@@ -5,8 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-08-21
+### Changed
+- Removed editor fixes, that was applied for the earlier versions of `UI Toolkit` (Unity 2022.2)
+
 ## [1.2.3] - 2026-08-18
-## Fixed
+### Fixed
 - Updated `README.md`.
 
 ## [1.2.2] - 2026-08-13
