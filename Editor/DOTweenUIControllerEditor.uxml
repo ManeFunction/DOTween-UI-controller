@@ -1,33 +1,27 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" 
-         editor-extension-mode="True">
-    
-    <Style src="DOTweenUIController.uss" />
-    
-    <ui:Template name="TweenDataControl" src="TweenDataControl.uxml" />
-    
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="True">
+    <ui:Template name="TweenDataControl" src="project://database/Packages/com.manefunction.dotween-ui-controller/Editor/TweenDataControl.uxml?fileID=9197481963319205126&amp;guid=4360fee001b654fd38ef8d6bc46fa471&amp;type=3#TweenDataControl"/>
+    <Style src="project://database/Packages/com.manefunction.dotween-ui-controller/Editor/DOTweenUIController.uss?fileID=7433441132597879392&amp;guid=0e2cc99f03bec4c6387d34a824ab532d&amp;type=3#DOTweenUIController"/>
     <ui:VisualElement class="tween-block">
         <ui:Label text="Options:" class="header"/>
-        <ui:Toggle binding-path="_autoplay" text="Autoplay" name="autoplayToggle" tooltip="Plays tweens automatically from the Start() of this component. Otherwise use Play() to invoke animations." />
-        <ui:Toggle binding-path="_createOnStart" text="Create on Start" name="createOnStartToggle" tooltip="Pre-creates tweens on Start() for more smooth play on demand." />
-        <ui:Toggle binding-path="_restartOnEnable" text="Restart on Enable" name="restartOnEnableToggle" tooltip="Restart tweens when Disable > Enable object or component. DO NOT enable w/o needs, as it's disable tween auto-kill feature." />
-        <ui:Toggle binding-path="_pauseOnDisable" text="Pause on Disable" name="pauseOnDisableToggle" tooltip="Pause tweens on components Disable. Otherwise it keeps playing." />
-        <ui:Toggle binding-path="_finishOnStop" text="Finish on Stop/Kill" tooltip="If Tweens will be Stop()'ed from the code, place values to the end positions. Finishing DO NOT work with looped tweens!" />
-        <ui:Toggle binding-path="_unscaledTime" text="Unscaled Time" tooltip="Use unscaled delta time to prevent inconsistent behaviour or freezing when timeScale is changed." />
+        <ui:Toggle binding-path="_autoplay" text="Autoplay" name="autoplayToggle" tooltip="Plays tweens automatically from the Start() of this component. Otherwise use Play() to invoke animations."/>
+        <ui:Toggle binding-path="_createOnStart" text="Create on Start" name="createOnStartToggle" tooltip="Pre-creates tweens on Start() for more smooth play on demand."/>
+        <ui:Toggle binding-path="_restartOnEnable" text="Restart on Enable" name="restartOnEnableToggle" tooltip="Restart tweens when Disable &gt; Enable object or component. DO NOT enable w/o needs, as it&apos;s disable tween auto-kill feature."/>
+        <ui:Toggle binding-path="_pauseOnDisable" text="Pause on Disable" name="pauseOnDisableToggle" tooltip="Pause tweens on components Disable. Otherwise it keeps playing."/>
+        <ui:Toggle binding-path="_finishOnStop" text="Finish on Stop/Kill" tooltip="If Tweens will be Stop()&apos;ed from the code, place values to the end positions. Finishing DO NOT work with looped tweens!"/>
+        <ui:Toggle binding-path="_unscaledTime" text="Unscaled Time" tooltip="Use unscaled delta time to prevent inconsistent behaviour or freezing when timeScale is changed."/>
     </ui:VisualElement>
-    
-    <ui:Instance template="TweenDataControl" name="moveX" binding-path="_moveX" />
-    <ui:Instance template="TweenDataControl" name="moveY" binding-path="_moveY" />
-    <ui:Instance template="TweenDataControl" name="scaleX" binding-path="_scaleX" />
-    <ui:Instance template="TweenDataControl" name="scaleY" binding-path="_scaleY" />
-    <ui:Instance template="TweenDataControl" name="rotate" binding-path="_rotate" />
-    <ui:Instance template="TweenDataControl" name="color" binding-path="_color" />
-    <ui:Instance template="TweenDataControl" name="fade" binding-path="_fade" />
-
+    <ui:Instance template="TweenDataControl" name="moveX" binding-path="_moveX"/>
+    <ui:Instance template="TweenDataControl" name="moveY" binding-path="_moveY"/>
+    <ui:Instance template="TweenDataControl" name="scaleX" binding-path="_scaleX"/>
+    <ui:Instance template="TweenDataControl" name="scaleY" binding-path="_scaleY"/>
+    <ui:Instance template="TweenDataControl" name="rotate" binding-path="_rotate"/>
+    <ui:Instance template="TweenDataControl" name="color" binding-path="_color"/>
+    <ui:Instance template="TweenDataControl" name="fade" binding-path="_fade"/>
     <ui:VisualElement class="buttons-row">
-        <ui:Button name="playButton" class="button play-button" tooltip="Play" />
-        <ui:Button name="playBackwardsButton" class="button play-backwards-button" tooltip="Play backwards" />
-        <ui:Button name="stopButton" class="button stop-button" tooltip="Stop" />
-        <ui:Button name="rewindButton" class="button rewind-button" tooltip="Reset to initial" />
-        <ui:Button name="recreateButton" class="button recreate-button" tooltip="Recreate" />
+        <ui:Button name="playButton" tooltip="Play" class="button play-button"/>
+        <ui:Button name="playBackwardsButton" tooltip="Play backwards" class="button play-backwards-button"/>
+        <ui:Button name="stopButton" tooltip="Stop" class="button stop-button"/>
+        <ui:Button name="rewindButton" tooltip="Reset to initial" class="button rewind-button"/>
+        <ui:Button name="recreateButton" tooltip="Recreate" class="button recreate-button"/>
     </ui:VisualElement>
 </ui:UXML>
