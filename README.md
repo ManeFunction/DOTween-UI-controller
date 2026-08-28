@@ -55,5 +55,6 @@ For more information about `DOTween`, including licensing and terms of use, plea
 
 This repo follows the [Conventional Commits](https://www.conventionalcommits.org/) specification (though not from the start).
 
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/ManeFunction?label=Sponsor&logo=GitHubSponsors&style=flat)](https://github.com/sponsors/ManeFunction)
 [![openupm](https://img.shields.io/npm/v/com.manefunction.dotween-ui-controller?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.manefunction.dotween-ui-controller/)
 [![openupm](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=downloads&query=%24.downloads&suffix=%2Fmonth&url=https%3A%2F%2Fpackage.openupm.com%2Fdownloads%2Fpoint%2Flast-month%2Fcom.manefunction.dotween-ui-controller)](https://openupm.com/packages/com.manefunction.dotween-ui-controller/)
