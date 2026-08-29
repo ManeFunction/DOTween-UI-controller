@@ -45,6 +45,10 @@ On Windows, I recommend `Git Bash` (`MINGW`) for CLI work: it is a Unix-like she
    - Run: `openupm add com.manefunction.dotween-ui-controller`.
    - Switch back to Unity and wait for the package to finish importing.
 
+## Usage
+
+Open the `Add Component` menu on a UI object, go to `DOTween -> UI Controller`, set up, and you are good.
+
 ## Disclaimer
 
 This controller is made to work with [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), a tweening library created and copyrighted by [Daniele Giardini](http://blog.demigiant.com).  

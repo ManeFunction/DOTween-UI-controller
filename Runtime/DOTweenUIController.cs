@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 namespace ManeFunction.DOTweenExtensions
 {
+    [AddComponentMenu("DOTween/UI Controller")]
     public class DOTweenUIController : UIBehaviour
     {
         [SerializeField] private bool _autoplay = true;

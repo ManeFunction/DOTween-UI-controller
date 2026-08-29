@@ -1,8 +1,8 @@
 {
   "name": "com.manefunction.dotween-ui-controller",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "displayName": "DOTween UI Controller",
-  "description": "Neat Unity controller component to set up UI DOTween animations without any code. DOTween Pro is not required, but it is supported!",
+  "description": "Neat Unity controller component to set up UI DOTween animations without any code.\nDOTween Pro is not required, but it is supported!\n\nCan be found in 'Add Component -> DOTween -> UI Controller'",
   "unity": "6000.0",
   "unityRelease": "81f1",
   "license": "MIT",
@@ -26,7 +26,7 @@
   ],
   "author": {
     "name": "Ilia Petrov-Komotskii (Mane Function)",
-    "email": "ilia@inkedkettle.art",
+    "email": "ilia@inkedkettle.games",
     "url": "https://github.com/ManeFunction"
   },
   "publishConfig": {
