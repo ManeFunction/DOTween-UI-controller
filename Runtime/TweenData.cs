@@ -2,7 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-namespace ManeFunction.DOTweenExtensions
+namespace Mane.Unity.DOTween
 {
     [Serializable]
     internal class TweenDataFloat : TweenData<float> { }
@@ -47,7 +47,7 @@ namespace ManeFunction.DOTweenExtensions
             {
                 if (_delayBetweenLoops > 0f)
                 {
-                    tween = DOTween.Sequence().Append(tween).AppendInterval(_delayBetweenLoops)
+                    tween = DG.Tweening.DOTween.Sequence().Append(tween).AppendInterval(_delayBetweenLoops)
                         .SetDelay(delay, false)
                         .SetLoops(_loopCount, _loopType);
                 }

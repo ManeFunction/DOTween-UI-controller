@@ -1,6 +1,6 @@
 {
     "name": "manefunction.dotween-ui-controller",
-    "rootNamespace": "",
+    "rootNamespace": "Mane.Unity.DOTween",
     "references": [
         "DOTween.Modules"
     ],

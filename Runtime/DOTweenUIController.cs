@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ManeFunction.DOTweenExtensions
+namespace Mane.Unity.DOTween
 {
-    [AddComponentMenu("DOTween/UI Controller")]
+    [AddComponentMenu("Mane Tools/Components/DOTween UI Controller")]
     public class DOTweenUIController : UIBehaviour
     {
         [SerializeField] private bool _autoplay = true;

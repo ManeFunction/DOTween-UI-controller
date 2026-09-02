@@ -47,7 +47,7 @@ On Windows, I recommend `Git Bash` (`MINGW`) for CLI work: it is a Unix-like she
 
 ## Usage
 
-Open the `Add Component` menu on a UI object, go to `DOTween -> UI Controller`, set up, and you are good.
+Open the `Add Component` menu on a UI object, go to `Mane Tools -> Components -> DOTween UI Controller`, set up, and you are good.
 
 ## Disclaimer
 

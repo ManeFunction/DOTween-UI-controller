@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+## [2.0.0] - 2026-09-02
+Adapted package to `ManeTools` package family (see my [GitHub](https://github.com/ManeFunction) for more useful Unity tools).
+
+### Changed
+- BREAKING CHANGE: Namespace was changed to `Mane.Unity.DOTween`.
+- Moved context "Add component" menu to `Mane Tools -> Components -> DOTween UI Controller`.
+- Set up asmdef's with new namespaces and removed auto-referencing from the Editor.
+- `Loop Count` field now renders "None" instead of "0".
+
 ## [1.4.1] - 2026-09-01
 ### Changed
 - Update minimum `uGUI` dependency version to `2.0.0` (merge of TMPro).
@@ -24,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 - Added RectTransform checks for all transform related tweens.
 - Added "Add" button to all warnings that indicates missing components.
-- Added Loop Count field now renders an explicit "infinity" label instead of just "-1" indicator.
+- `Loop Count` field now renders an explicit "Infinity" label instead of just "-1" indicator.
 
 ### Changed
 - Removed editor fixes that was applied for the earlier versions of `UI Toolkit` (Unity 2022.2).

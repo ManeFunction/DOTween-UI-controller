@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="True">
-    <ui:Template name="TweenDataControl" src="project://database/Packages/com.manefunction.dotween-ui-controller/Editor/TweenDataControl.uxml?fileID=9197481963319205126&amp;guid=4360fee001b654fd38ef8d6bc46fa471&amp;type=3#TweenDataControl"/>
-    <Style src="project://database/Packages/com.manefunction.dotween-ui-controller/Editor/DOTweenUIController.uss?fileID=7433441132597879392&amp;guid=0e2cc99f03bec4c6387d34a824ab532d&amp;type=3#DOTweenUIController"/>
+    <ui:Template name="TweenDataControl" src="TweenDataControl.uxml" />
+    <Style src="DOTweenUIController.uss" />
     <ui:VisualElement class="tween-block">
         <ui:Label text="Options:" class="header"/>
         <ui:Toggle binding-path="_autoplay" text="Autoplay" name="autoplayToggle" tooltip="Plays tweens automatically from the Start() of this component. Otherwise use Play() to invoke animations."/>

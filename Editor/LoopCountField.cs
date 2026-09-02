@@ -1,17 +1,19 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace ManeFunction.DOTweenExtensions.Editor
+namespace Mane.Unity.DOTween.Editor
 {
     [UxmlElement]
     internal partial class LoopCountField : IntegerField
     {
         private const string InfinityLabel = "Infinity";
+        private const string NoneLabel = "None";
 
-        protected override string ValueToString(int v)
-        {
-            return v < 0 ? InfinityLabel : base.ValueToString(v);
-        }
+        protected override string ValueToString(int v) => v == 0 
+            ? NoneLabel 
+            : v < 0 
+                ? InfinityLabel 
+                : base.ValueToString(v);
 
         protected override int StringToValue(string str)
         {
