@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-02
+### Added
+- Added summary docs for all public methods and classes.
+
 ## [2.0.0] - 2026-09-02
 Adapted package to `ManeTools` package family (see my [GitHub](https://github.com/ManeFunction) for more useful Unity tools).
 

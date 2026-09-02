@@ -7,6 +7,11 @@ using UnityEngine.UI;
 
 namespace Mane.Unity.DOTween
 {
+    /// <summary>
+    /// Inspector-driven UI tweens (move, scale, rotate Z, CanvasGroup fade, graphic color)
+    /// backed by DOTween. Lifecycle flags on this component (autoplay, pause on disable,
+    /// finish on stop) still apply when playback is controlled from code.
+    /// </summary>
     [AddComponentMenu("Mane Tools/Components/DOTween UI Controller")]
     public class DOTweenUIController : UIBehaviour
     {
@@ -82,6 +87,12 @@ namespace Mane.Unity.DOTween
             base.OnDestroy();
         }
 
+        /// <summary>
+        /// Enables or disables one Inspector tween slot. Does not rebuild tweens that are
+        /// already created; dispose them first if a running animation should pick up the change.
+        /// </summary>
+        /// <param name="tweenType">Slot to toggle.</param>
+        /// <param name="isEnabled">Whether that slot should create a tween on the next create.</param>
         public void SetTweenEnabled(TweenType tweenType, bool isEnabled)
         {
             switch (tweenType)
@@ -254,24 +265,46 @@ namespace Mane.Unity.DOTween
             if (colorTween != null) _activeTweens.Add(colorTween);
         }
         
+        /// <summary>
+        /// Creates tweens from the Inspector setup if none exist, then plays them forward.
+        /// </summary>
+        /// <param name="delay">
+        /// Extra delay added to each tween's own delay. Used only when tweens are created
+        /// on this call; ignored if they already exist.
+        /// </param>
         public void Play(float delay = 0f)
         {
             TryCreateTweens(delay);
             PlayTweens();
         }
 
+        /// <summary>
+        /// Creates tweens from the Inspector setup if none exist, then plays them backward.
+        /// </summary>
+        /// <param name="delay">
+        /// Extra delay added to each tween's own delay. Used only when tweens are created
+        /// on this call; ignored if they already exist.
+        /// </param>
         public void PlayBackwards(float delay = 0f)
         {
             TryCreateTweens(delay);
             PlayTweensBackwards();
         }
 
+        /// <summary>
+        /// Pauses all active tweens. They stay allocated and can be resumed with
+        /// <see cref="Play(float)"/> or <see cref="PlayBackwards(float)"/>.
+        /// </summary>
         public void Pause()
         {
             foreach (Tween tween in _activeTweens)
                 tween.Pause();
         }
 
+        /// <summary>
+        /// Stops all active tweens without disposing them. Completes each tween when
+        /// Finish On Stop is enabled; otherwise pauses. Tweens stay in the active list.
+        /// </summary>
         public void Stop()
         {
             foreach (Tween tween in _activeTweens)
@@ -283,6 +316,10 @@ namespace Mane.Unity.DOTween
             }
         }
 
+        /// <summary>
+        /// Kills all active tweens and clears the list. Completes them first when
+        /// Finish On Stop is enabled.
+        /// </summary>
         public void StopAndDispose()
         {
             foreach (Tween tween in _activeTweens)
@@ -291,6 +328,10 @@ namespace Mane.Unity.DOTween
             _activeTweens.Clear();
         }
 
+        /// <summary>
+        /// Rewinds all active tweens to their start, kills them, and clears the list.
+        /// Ignores Finish On Stop.
+        /// </summary>
         public void UndoAndDispose()
         {
             foreach (Tween tween in _activeTweens)
@@ -302,6 +343,10 @@ namespace Mane.Unity.DOTween
             _activeTweens.Clear();
         }
 
+        /// <summary>
+        /// Restarts all active tweens from the beginning. If none exist yet, this is
+        /// equivalent to <see cref="Play(float)"/>.
+        /// </summary>
         public void Restart()
         {
             if (_activeTweens.Count == 0)
@@ -311,6 +356,10 @@ namespace Mane.Unity.DOTween
                     tween.Restart();
         }
 
+        /// <summary>
+        /// Completes all active tweens, then plays them backward. If none exist yet, this
+        /// is equivalent to <see cref="PlayBackwards(float)"/>.
+        /// </summary>
         public void RestartBackwards()
         {
             if (_activeTweens.Count == 0)
@@ -323,6 +372,9 @@ namespace Mane.Unity.DOTween
                 }
         }
 
+        /// <summary>
+        /// Rewinds all active tweens to their start without killing them.
+        /// </summary>
         public void Rewind()
         {
             foreach (Tween tween in _activeTweens)
@@ -347,14 +399,22 @@ namespace Mane.Unity.DOTween
                 tween.PlayBackwards();
         }
         
+        /// <summary>Inspector tween slot toggled by <see cref="SetTweenEnabled"/>.</summary>
         public enum TweenType
         {
+            /// <summary>Anchored position X.</summary>
             MoveX,
+            /// <summary>Anchored position Y.</summary>
             MoveY,
+            /// <summary>Local scale X.</summary>
             ScaleX,
+            /// <summary>Local scale Y.</summary>
             ScaleY,
+            /// <summary>Local Euler Z.</summary>
             Rotate,
+            /// <summary>CanvasGroup alpha.</summary>
             Fade,
+            /// <summary>MaskableGraphic color.</summary>
             Color,
         }
     }
