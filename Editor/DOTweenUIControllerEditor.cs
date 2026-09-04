@@ -172,8 +172,6 @@ namespace Mane.Unity.DOTween.Editor
 
             void UpdateLoopField()
             {
-                if (loopField.value < -1)
-                    loopField.value = -1;
                 loopOptions.style.display = loopField.value == 0 ? DisplayStyle.None : DisplayStyle.Flex;
             }
 

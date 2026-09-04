@@ -11,7 +11,8 @@
     "url": "git+https://github.com/ManeFunction/DOTween-UI-controller.git"
   },
   "dependencies": {
-    "com.unity.ugui": "2.0.0"
+    "com.unity.ugui": "2.0.0",
+    "com.manefunction.tools-unity": "2.0.0-preview.1"
   },
   "keywords": [
     "unity",

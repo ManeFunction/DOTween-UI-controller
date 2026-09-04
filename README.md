@@ -2,7 +2,7 @@
 
 A neat Unity controller component to set up UI `DOTween` animations without any code. `DOTween Pro` is not required, but it is supported!
 
-The package is supported starting from **Unity 6.0.81** (6000.1.81f1)
+The package is supported starting from **Unity 6.0.81** (6000.1.81f1) and dependent on [ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git) (Editor part only).
 
 ## Features
 

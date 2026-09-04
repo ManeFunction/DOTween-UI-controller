@@ -2,7 +2,8 @@
     "name": "manefunction.dotween-ui-controller.editor",
     "rootNamespace": "Mane.Unity.DOTween.Editor",
     "references": [
-        "GUID:50bf2f3e6dfbd4ee9af1bbf77ae11920"
+        "GUID:50bf2f3e6dfbd4ee9af1bbf77ae11920",
+        "GUID:8a4e6e73610f6483791a6c2c8cdabadd"
     ],
     "includePlatforms": [
         "Editor"

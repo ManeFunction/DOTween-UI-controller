@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+### Added
+- Added dependency to [ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git).
+
+### Changed
+- `OptionalSizeField` replaced with universal `LimitedValueField` from the dependent package.
 
 ## [2.1.0] - 2026-09-02
 ### Added
