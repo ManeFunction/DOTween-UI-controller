@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="True">
     <ui:Template name="TweenDataControl" src="TweenDataControl.uxml" />
     <Style src="DOTweenUIController.uss" />
-    <ui:VisualElement class="tween-block">
-        <ui:Label text="Options:" class="header"/>
+    <ui:VisualElement class="mie-block">
+        <ui:Label text="Options:" class="mie-header"/>
         <ui:Toggle binding-path="_autoplay" text="Autoplay" name="autoplayToggle" tooltip="Plays tweens automatically from the Start() of this component. Otherwise use Play() to invoke animations."/>
         <ui:Toggle binding-path="_createOnStart" text="Create on Start" name="createOnStartToggle" tooltip="Pre-creates tweens on Start() for more smooth play on demand."/>
         <ui:Toggle binding-path="_restartOnEnable" text="Restart on Enable" name="restartOnEnableToggle" tooltip="Restart tweens when Disable &gt; Enable object or component. DO NOT enable w/o needs, as it&apos;s disable tween auto-kill feature."/>
@@ -18,10 +18,10 @@
     <ui:Instance template="TweenDataControl" name="color" binding-path="_color"/>
     <ui:Instance template="TweenDataControl" name="fade" binding-path="_fade"/>
     <ui:VisualElement class="buttons-row">
-        <ui:Button name="playButton" tooltip="Play" class="button play-button"/>
-        <ui:Button name="playBackwardsButton" tooltip="Play backwards" class="button play-backwards-button"/>
-        <ui:Button name="stopButton" tooltip="Stop" class="button stop-button"/>
-        <ui:Button name="rewindButton" tooltip="Reset to initial" class="button rewind-button"/>
-        <ui:Button name="recreateButton" tooltip="Recreate" class="button recreate-button"/>
+        <ui:Button name="playButton" tooltip="Play" class="mie-button play-button"/>
+        <ui:Button name="playBackwardsButton" tooltip="Play backwards" class="mie-button play-backwards-button"/>
+        <ui:Button name="stopButton" tooltip="Stop" class="mie-button stop-button"/>
+        <ui:Button name="rewindButton" tooltip="Reset to initial" class="mie-button rewind-button"/>
+        <ui:Button name="recreateButton" tooltip="Recreate" class="mie-button recreate-button"/>
     </ui:VisualElement>
 </ui:UXML>
