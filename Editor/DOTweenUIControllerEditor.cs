@@ -11,16 +11,10 @@ using Toggle = UnityEngine.UIElements.Toggle;
 namespace Mane.Unity.DOTween.Editor
 {
     [CustomEditor(typeof(DOTweenUIController))]
-    public class DOTweenUIControllerEditor : UnityEditor.Editor
+    public class DOTweenUIControllerEditor : ManeEditor
     {
-        [SerializeField] private VisualTreeAsset xml;
-        
-        public override VisualElement CreateInspectorGUI()
+        protected override void BuildInspector(VisualElement root)
         {
-            VisualElement root = new();
-            ManeEditorStyles.Apply(root);
-            xml.CloneTree(root);
-            
             // Setup autoplay toggles
             Toggle restartOnEnableToggle = root.Q<Toggle>("restartOnEnableToggle");
             Toggle autoplayToggle = root.Q<Toggle>("autoplayToggle");
@@ -47,9 +41,6 @@ namespace Mane.Unity.DOTween.Editor
             // Play-mode-only controls: built-in VisualElement.tooltip is suppressed in Play Mode
             SetupEditorButtons(root);
 
-            return root;
-            
-            
             void SetMainTogglesVisibility()
             {
                 restartOnEnableToggle.style.display = autoplayToggle.value ? DisplayStyle.Flex : DisplayStyle.None;
