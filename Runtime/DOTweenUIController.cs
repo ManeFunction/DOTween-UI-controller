@@ -12,7 +12,7 @@ namespace Mane.Unity.DOTween
     /// backed by DOTween. Lifecycle flags on this component (autoplay, pause on disable,
     /// finish on stop) still apply when playback is controlled from code.
     /// </summary>
-    [AddComponentMenu("Mane Tools/Components/DOTween UI Controller")]
+    [AddComponentMenu("Mane Tools/UI/DOTween UI Controller")]
     public class DOTweenUIController : UIBehaviour
     {
         [SerializeField] private bool _autoplay = true;

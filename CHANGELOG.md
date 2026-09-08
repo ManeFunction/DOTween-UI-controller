@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - `OptionalSizeField` replaced with universal `LimitedValueField` from the dependent package.
+- Moved context "Add component" menu to `Mane Tools -> UI -> DOTween UI Controller`.
+
 
 ## [2.1.0] - 2026-09-02
 ### Added
