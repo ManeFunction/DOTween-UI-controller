@@ -1,4 +1,5 @@
 using System;
+using Mane.Unity;
 using Mane.Unity.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -73,33 +74,31 @@ namespace Mane.Unity.DOTween.Editor
                 Debug.LogError($"Toggle 'isEnableToggle' not found in '{elementName}'.");
                 return;
             }
-            
-            // Message box
-            VisualElement messageBox = tweenDataElement.Q<VisualElement>("messageBox");
-            if (messageBox == null)
-            {
-                Debug.LogError($"VisualElement 'messageBox' not found in '{elementName}'.");
-                return;
-            }
-            
+
             isEnableToggle.text = label;
-            
-            // Required component
-            Button addComponentButton = messageBox.Q<Button>("addComponentButton");
+
             Type componentToAdd = GetAddableComponentType(requiredComponent);
             if (requiredComponent != null && !TargetHasComponent(requiredComponent))
             {
                 ((DOTweenUIController)target).SetTweenEnabled(tweenType, false);
                 isEnableToggle.SetEnabled(false);
-                Label messageLabel = messageBox.Q<Label>("messageBoxLabel");
-                messageLabel.text = messageBox.tooltip = isEnableToggle.tooltip =
-                    $"'{requiredComponent.Name}' is required";
 
-                if (addComponentButton == null)
+                VisualElement messageBox = InfoBoxDrawer.Create(
+                    $"'{requiredComponent.Name}' is required",
+                    InfoBoxType.Warning);
+                messageBox.name = "messageBox";
+                messageBox.tooltip = isEnableToggle.tooltip = $"'{requiredComponent.Name}' is required";
+
+                Button addComponentButton = new()
                 {
-                    Debug.LogError($"Button 'addComponentButton' not found in '{elementName}'.");
-                }
-                else if (componentToAdd == null)
+                    name = "addComponentButton",
+                    text = "Add",
+                    tooltip = "Add"
+                };
+                addComponentButton.AddToClassList("mie-button");
+                addComponentButton.AddToClassList("add-component-button");
+
+                if (componentToAdd == null)
                 {
                     addComponentButton.style.display = DisplayStyle.None;
                 }
@@ -112,12 +111,16 @@ namespace Mane.Unity.DOTween.Editor
                             return;
 
                         Undo.AddComponent(gameObject, componentToAdd);
+                        messageBox.style.display = DisplayStyle.None;
+                        isEnableToggle.SetEnabled(true);
+                        isEnableToggle.tooltip = string.Empty;
                     };
                 }
-            }
-            else
-            {
-                messageBox.style.display = DisplayStyle.None;
+
+                messageBox.Add(addComponentButton);
+
+                VisualElement block = tweenDataElement.Q(className: "mie-block") ?? tweenDataElement;
+                block.Insert(0, messageBox);
             }
 
             // Initialize base visibility
