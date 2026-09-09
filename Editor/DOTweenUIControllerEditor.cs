@@ -1,5 +1,4 @@
 using System;
-using Mane.Unity;
 using Mane.Unity.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -123,12 +122,6 @@ namespace Mane.Unity.DOTween.Editor
                 block.Insert(0, messageBox);
             }
 
-            // Initialize base visibility
-            UpdateContentVisibility();
-
-            isEnableToggle.RegisterValueChangedCallback(_ => { UpdateContentVisibility(); });
-            
-            // Handle looping value
             IntegerField loopField = contentContainer.Q<IntegerField>("loopCountField");
             VisualElement loopOptions = contentContainer.Q<VisualElement>("loopOptions");
             if (loopField == null || loopOptions == null)
@@ -136,10 +129,8 @@ namespace Mane.Unity.DOTween.Editor
                 Debug.LogError("One or more UI elements for loop data not found.");
                 return;
             }
-            
-            // Initialize loop type visibility
+
             UpdateLoopField();
-            
             loopField.RegisterValueChangedCallback(_ => { UpdateLoopField(); });
 
             // Handle useCurveToggle
@@ -159,12 +150,6 @@ namespace Mane.Unity.DOTween.Editor
             useCurveToggle.RegisterValueChangedCallback(_ => { UpdateEaseFields(); });
 
             return;
-
-            void UpdateContentVisibility()
-            {
-                bool isEnabled = isEnableToggle.value;
-                contentContainer.style.display = isEnabled ? DisplayStyle.Flex : DisplayStyle.None;
-            }
 
             void UpdateLoopField()
             {
