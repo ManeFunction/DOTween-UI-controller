@@ -11,7 +11,7 @@
             <uie:PropertyField label="Value" binding-path="_value" />
             <uie:PropertyField label="Duration" binding-path="_duration" />
             <ui:VisualElement class="mie-nested-block">
-                <mie:LimitedValueField label="Loop Count" binding-path="_loopCount" name="loopCountField"
+                <mie:LimitedIntField label="Loop Count" binding-path="_loopCount" name="loopCountField"
                                           allow-negatives="true" negative-label="Infinity" zero-label="None"
                                           class="typed-field" tooltip="Use -1 or scroll to negative value for infinite looping." />
                 <ui:VisualElement name="loopOptions" >
