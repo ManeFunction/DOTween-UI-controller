@@ -49,6 +49,34 @@ On Windows, I recommend `Git Bash` (`MINGW`) for CLI work: it is a Unix-like she
 
 Open the `Add Component` menu on a UI object, go to `Mane Tools -> UI -> DOTween UI Controller`, set up, and you are good.
 
+### Scripting
+
+Playback can also be driven from code. The lifecycle flags from the inspector (autoplay, pause on disable, finish on stop) still apply.
+
+```csharp
+using Mane.Unity.DOTween;
+
+controller.Play();              // creates tweens if needed, plays forward
+controller.PlayBackwards(0.2f); // optional extra delay, used only when tweens are created
+controller.Pause();
+controller.Stop();              // completes or pauses, depending on Finish On Stop
+controller.Restart();
+controller.RestartBackwards();
+controller.Rewind();
+controller.StopAndDispose();    // kills tweens; the next Play rebuilds them
+controller.UndoAndDispose();    // rewinds, then kills tweens
+```
+
+Each inspector tween slot can be switched on or off with `SetTweenEnabled`. Tweens that already exist are not rebuilt, so dispose them first if a running animation should pick up the change:
+
+```csharp
+controller.StopAndDispose();
+controller.SetTweenEnabled(DOTweenUIController.TweenType.Fade, false);
+controller.Play();
+```
+
+`TweenType` values: `MoveX`, `MoveY`, `ScaleX`, `ScaleY`, `Rotate`, `Fade`, `Color`.
+
 ## Disclaimer
 
 This controller is made to work with [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), a tweening library created and copyrighted by [Daniele Giardini](http://blog.demigiant.com).  
