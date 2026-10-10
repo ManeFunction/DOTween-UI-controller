@@ -34,14 +34,19 @@ namespace Mane.Unity.DOTween
         [SerializeField] private TweenDataColor _color;
 
         private readonly List<Tween> _activeTweens = new(7);
+        private readonly List<Tween> _pausedOnDisable = new(7);
 
         private Lazy<RectTransform> _rectTransform;
         private Lazy<CanvasGroup> _canvasGroup;
         private Lazy<MaskableGraphic> _graphics;
-        
+
         private bool _shouldRestartOnEnable;
-        
+
         private bool RestartOnEnable => _autoplay && _restartOnEnable;
+
+        // Only one-shot autoplay tweens are killed when they finish. Code-driven and restartable
+        // tweens stay alive, so Play, PlayBackwards and Restart keep working on them.
+        private bool AutoKill => _autoplay && !_restartOnEnable;
 
         protected override void Awake()
         {
@@ -56,28 +61,46 @@ namespace Mane.Unity.DOTween
         {
             base.Start();
 
+            // Play() may have created the tweens before Start, e.g. right after Instantiate.
             if (_autoplay || _createOnStart)
-                CreateTweeners();
+                TryCreateTweens();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            
+
             if (_shouldRestartOnEnable)
+            {
+                _pausedOnDisable.Clear();
                 Restart();
+            }
             else if (_pauseOnDisable)
-                PlayTweens();
+            {
+                // Resume only what OnDisable paused, not tweens that were never played or paused on purpose.
+                foreach (Tween tween in _pausedOnDisable)
+                    if (tween.IsActive())
+                        tween.Play();
+
+                _pausedOnDisable.Clear();
+            }
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            
+
             _shouldRestartOnEnable = RestartOnEnable;
-            
+
             if (_pauseOnDisable)
+            {
+                _pausedOnDisable.Clear();
+                foreach (Tween tween in _activeTweens)
+                    if (tween.IsActive() && tween.IsPlaying())
+                        _pausedOnDisable.Add(tween);
+
                 Pause();
+            }
         }
 
         protected override void OnDestroy()
@@ -140,7 +163,7 @@ namespace Mane.Unity.DOTween
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
+            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
             if (moveXTween != null) _activeTweens.Add(moveXTween);
 
             Tween moveYTween = _moveY.TryCreateTween((direction, value, duration) =>
@@ -160,7 +183,7 @@ namespace Mane.Unity.DOTween
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
+            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
             if (moveYTween != null) _activeTweens.Add(moveYTween);
 
             Tween scaleXTween = _scaleX.TryCreateTween((direction, value, duration) =>
@@ -181,7 +204,7 @@ namespace Mane.Unity.DOTween
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
+            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
             if (scaleXTween != null) _activeTweens.Add(scaleXTween);
 
             Tween scaleYTween = _scaleY.TryCreateTween((direction, value, duration) =>
@@ -202,7 +225,7 @@ namespace Mane.Unity.DOTween
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
+            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
             if (scaleYTween != null) _activeTweens.Add(scaleYTween);
 
             Tween rotateTween = _rotate.TryCreateTween((direction, value, duration) =>
@@ -225,7 +248,7 @@ namespace Mane.Unity.DOTween
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
+            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
             if (rotateTween != null) _activeTweens.Add(rotateTween);
             
             Tween fadeTween = _fade.TryCreateTween((direction, value, duration) =>
@@ -243,7 +266,7 @@ namespace Mane.Unity.DOTween
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
+            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
             if (fadeTween != null) _activeTweens.Add(fadeTween);
             
             Tween colorTween = _color.TryCreateTween((direction, value, duration) =>
@@ -261,7 +284,7 @@ namespace Mane.Unity.DOTween
                 }
 
                 return tweener;
-            }, _unscaledTime, _autoplay, RestartOnEnable, additionalDelay);
+            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
             if (colorTween != null) _activeTweens.Add(colorTween);
         }
         
@@ -349,6 +372,7 @@ namespace Mane.Unity.DOTween
         /// </summary>
         public void Restart()
         {
+            RemoveKilledTweens();
             if (_activeTweens.Count == 0)
                 Play();
             else
@@ -358,17 +382,20 @@ namespace Mane.Unity.DOTween
 
         /// <summary>
         /// Completes all active tweens, then plays them backward. If none exist yet, this
-        /// is equivalent to <see cref="PlayBackwards(float)"/>.
+        /// is equivalent to <see cref="PlayBackwards(float)"/>. One-shot autoplay tweens
+        /// (Autoplay on, Restart On Enable off) are killed on completion, so they only complete.
         /// </summary>
         public void RestartBackwards()
         {
+            RemoveKilledTweens();
             if (_activeTweens.Count == 0)
                 PlayBackwards();
             else
                 foreach (Tween tween in _activeTweens)
                 {
                     tween.Complete();
-                    tween.PlayBackwards();
+                    if (tween.IsActive())
+                        tween.PlayBackwards();
                 }
         }
 
@@ -383,9 +410,13 @@ namespace Mane.Unity.DOTween
 
         private void TryCreateTweens(float delay = 0f)
         {
+            RemoveKilledTweens();
             if (_activeTweens.Count == 0)
                 CreateTweeners(delay);
         }
+
+        // Auto-killed or externally killed tweens are dead handles; drop them so the next call rebuilds.
+        private void RemoveKilledTweens() => _activeTweens.RemoveAll(tween => !tween.IsActive());
         
         private void PlayTweens()
         {

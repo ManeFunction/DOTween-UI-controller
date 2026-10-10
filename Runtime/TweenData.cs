@@ -30,18 +30,14 @@ namespace Mane.Unity.DOTween
         }
 
         public Tween TryCreateTween(Func<Direction, T, float, Tween> createTweener,
-            bool unscaledTime, bool autoplay, bool restartable, float additionalDelay)
+            bool unscaledTime, bool autoplay, bool autoKill, float additionalDelay)
         {
             if (!_isEnable)
                 return null;
 
             Tween tween = createTweener(_direction, _value, _duration);
-            tween.SetUpdate(unscaledTime);
-            tween.SetAutoKill(!restartable && _loopCount == 0);
             _easeData.Apply(tween);
-            if (!autoplay)
-                tween.Pause();
-            
+
             float delay = _delay + additionalDelay;
             if (_loopCount != 0)
             {
@@ -58,6 +54,12 @@ namespace Mane.Unity.DOTween
             }
             else
                 tween.SetDelay(delay);
+
+            // Applied to the outermost tween: DOTween ignores these settings on a tween nested in a sequence.
+            tween.SetUpdate(unscaledTime);
+            tween.SetAutoKill(autoKill && _loopCount == 0);
+            if (!autoplay)
+                tween.Pause();
 
             return tween;
         }
