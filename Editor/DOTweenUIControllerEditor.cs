@@ -30,27 +30,28 @@ namespace Mane.Unity.DOTween.Editor
             }
 
             // Setup visibility callbacks for each tween data block
-            SetupTweenData(DOTweenUIController.TweenType.MoveX, root, "moveX", "Move X", typeof(RectTransform));
-            SetupTweenData(DOTweenUIController.TweenType.MoveY, root, "moveY", "Move Y", typeof(RectTransform));
-            SetupTweenData(DOTweenUIController.TweenType.ScaleX, root, "scaleX", "Scale X", typeof(RectTransform));
-            SetupTweenData(DOTweenUIController.TweenType.ScaleY, root, "scaleY", "Scale Y", typeof(RectTransform));
-            SetupTweenData(DOTweenUIController.TweenType.Rotate, root, "rotate", "Rotate Z", typeof(RectTransform));
-            SetupTweenData(DOTweenUIController.TweenType.Fade, root, "fade", "Fade", typeof(CanvasGroup));
-            SetupTweenData(DOTweenUIController.TweenType.Color, root, "color", "Color", typeof(MaskableGraphic));
+            SetupTweenData(DOTweenUIController.TweenType.MoveX, root, "moveX", "Move X");
+            SetupTweenData(DOTweenUIController.TweenType.MoveY, root, "moveY", "Move Y");
+            SetupTweenData(DOTweenUIController.TweenType.ScaleX, root, "scaleX", "Scale X");
+            SetupTweenData(DOTweenUIController.TweenType.ScaleY, root, "scaleY", "Scale Y");
+            SetupTweenData(DOTweenUIController.TweenType.Rotate, root, "rotate", "Rotate Z");
+            SetupTweenData(DOTweenUIController.TweenType.Fade, root, "fade", "Fade");
+            SetupTweenData(DOTweenUIController.TweenType.Color, root, "color", "Color");
 
             // Play-mode-only controls: built-in VisualElement.tooltip is suppressed in Play Mode
             SetupEditorButtons(root);
 
             void SetMainTogglesVisibility()
             {
-                restartOnEnableToggle.style.display = autoplayToggle.value ? DisplayStyle.Flex : DisplayStyle.None;
-                createOnStartToggle.style.display = autoplayToggle.value ? DisplayStyle.None : DisplayStyle.Flex;
+                restartOnEnableToggle.SetVisible(autoplayToggle.value);
+                createOnStartToggle.SetVisible(!autoplayToggle.value);
             }
         }
 
         private void SetupTweenData(DOTweenUIController.TweenType tweenType, VisualElement root,
-            string elementName, string label, Type requiredComponent = null)
+            string elementName, string label)
         {
+            Type requiredComponent = DOTweenUIController.GetRequiredComponent(tweenType);
             VisualElement tweenDataElement = root.Q<VisualElement>(elementName);
             if (tweenDataElement == null)
             {
@@ -153,14 +154,14 @@ namespace Mane.Unity.DOTween.Editor
 
             void UpdateLoopField()
             {
-                loopOptions.style.display = loopField.value == 0 ? DisplayStyle.None : DisplayStyle.Flex;
+                loopOptions.SetVisible(loopField.value != 0);
             }
 
             void UpdateEaseFields()
             {
                 bool useCurve = useCurveToggle.value;
-                curveField.style.display = useCurve ? DisplayStyle.Flex : DisplayStyle.None;
-                easeField.style.display = useCurve ? DisplayStyle.None : DisplayStyle.Flex;
+                curveField.SetVisible(useCurve);
+                easeField.SetVisible(!useCurve);
             }
         }
             
@@ -174,7 +175,7 @@ namespace Mane.Unity.DOTween.Editor
             }
 
             bool showButtons = Application.isPlaying;
-            buttonsRow.style.display = showButtons ? DisplayStyle.Flex : DisplayStyle.None;
+            buttonsRow.SetVisible(showButtons);
             if (!showButtons)
                 return;
 

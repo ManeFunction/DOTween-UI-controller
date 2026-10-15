@@ -36,10 +36,6 @@ namespace Mane.Unity.DOTween
         private readonly List<Tween> _activeTweens = new(7);
         private readonly List<Tween> _pausedOnDisable = new(7);
 
-        private Lazy<RectTransform> _rectTransform;
-        private Lazy<CanvasGroup> _canvasGroup;
-        private Lazy<MaskableGraphic> _graphics;
-
         private bool _shouldRestartOnEnable;
 
         private bool RestartOnEnable => _autoplay && _restartOnEnable;
@@ -47,15 +43,6 @@ namespace Mane.Unity.DOTween
         // Only one-shot autoplay tweens are killed when they finish. Code-driven and restartable
         // tweens stay alive, so Play, PlayBackwards and Restart keep working on them.
         private bool AutoKill => _autoplay && !_restartOnEnable;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            _rectTransform = new Lazy<RectTransform>(() => transform as RectTransform);
-            _canvasGroup = new Lazy<CanvasGroup>(() => gameObject.GetComponent<CanvasGroup>());
-            _graphics = new Lazy<MaskableGraphic>(() => gameObject.GetComponent<MaskableGraphic>());
-        }
 
         protected override void Start()
         {
@@ -116,178 +103,64 @@ namespace Mane.Unity.DOTween
         /// </summary>
         /// <param name="tweenType">Slot to toggle.</param>
         /// <param name="isEnabled">Whether that slot should create a tween on the next create.</param>
-        public void SetTweenEnabled(TweenType tweenType, bool isEnabled)
-        {
-            switch (tweenType)
+        public void SetTweenEnabled(TweenType tweenType, bool isEnabled) => GetSlot(tweenType).IsEnable = isEnabled;
+
+        /// <summary>
+        /// Component that a tween slot animates. The slot needs it on the same GameObject.
+        /// </summary>
+        public static Type GetRequiredComponent(TweenType tweenType) =>
+            tweenType switch
             {
-                case TweenType.MoveX:
-                    _moveX.IsEnable = isEnabled;
-                    break;
-                case TweenType.MoveY:
-                    _moveY.IsEnable = isEnabled;
-                    break;
-                case TweenType.ScaleX:
-                    _scaleX.IsEnable = isEnabled;
-                    break;
-                case TweenType.ScaleY:
-                    _scaleY.IsEnable = isEnabled;
-                    break;
-                case TweenType.Rotate:
-                    _rotate.IsEnable = isEnabled;
-                    break;
-                case TweenType.Fade:
-                    _fade.IsEnable = isEnabled;
-                    break;
-                case TweenType.Color:
-                    _color.IsEnable = isEnabled;
-                    break;
+                TweenType.Fade => typeof(CanvasGroup),
+                TweenType.Color => typeof(MaskableGraphic),
+                _ => typeof(RectTransform)
+            };
+
+        private ITweenSlot GetSlot(TweenType tweenType) =>
+            tweenType switch
+            {
+                TweenType.MoveX => _moveX,
+                TweenType.MoveY => _moveY,
+                TweenType.ScaleX => _scaleX,
+                TweenType.ScaleY => _scaleY,
+                TweenType.Rotate => _rotate,
+                TweenType.Fade => _fade,
+                TweenType.Color => _color,
+                _ => throw new ArgumentOutOfRangeException(nameof(tweenType), tweenType, null)
+            };
+
+        // Each slot only says how to tween its value to a target. TweenData turns that into a From tween when needed.
+        private void CreateTweeners(float additionalDelay = 0f)
+        {
+            RectTransform rect = transform as RectTransform;
+            Add(TweenType.MoveX, _moveX, (value, duration) => rect.DOAnchorPosX(value, duration));
+            Add(TweenType.MoveY, _moveY, (value, duration) => rect.DOAnchorPosY(value, duration));
+            Add(TweenType.ScaleX, _scaleX, (value, duration) => rect.DOScaleX(value, duration));
+            Add(TweenType.ScaleY, _scaleY, (value, duration) => rect.DOScaleY(value, duration));
+            Add(TweenType.Rotate, _rotate, (value, duration) =>
+            {
+                Vector3 euler = rect.rotation.eulerAngles;
+                return rect.DORotate(new Vector3(euler.x, euler.y, value), duration, RotateMode.FastBeyond360);
+            });
+            Add(TweenType.Fade, _fade, (value, duration) => GetComponent<CanvasGroup>().DOFade(value, duration));
+            Add(TweenType.Color, _color, (value, duration) => GetComponent<MaskableGraphic>().DOColor(value, duration));
+
+            void Add<T>(TweenType tweenType, TweenData<T> data, Func<T, float, Tweener> tweenTo)
+            {
+                if (!data.IsEnable)
+                    return;
+
+                Type required = GetRequiredComponent(tweenType);
+                if (GetComponent(required) == null)
+                {
+                    Debug.LogWarning($"{tweenType} tween needs a {required.Name} on '{name}'. It is skipped.", this);
+                    return;
+                }
+
+                _activeTweens.Add(data.CreateTween(tweenTo, _unscaledTime, _autoplay, AutoKill, additionalDelay));
             }
         }
 
-        private void CreateTweeners(float additionalDelay = 0f)
-        {
-            Tween moveXTween = _moveX.TryCreateTween((direction, value, duration) =>
-            {
-                Tweener tweener;
-                if (direction == Direction.From)
-                {
-                    float anchoredPositionX = _rectTransform.Value.anchoredPosition.x;
-                    _rectTransform.Value.anchoredPosition = new Vector2(
-                        value,
-                        _rectTransform.Value.anchoredPosition.y);
-                    tweener = _rectTransform.Value.DOAnchorPosX(anchoredPositionX, duration);
-                }
-                else
-                {
-                    tweener = _rectTransform.Value.DOAnchorPosX(value, duration);
-                }
-
-                return tweener;
-            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
-            if (moveXTween != null) _activeTweens.Add(moveXTween);
-
-            Tween moveYTween = _moveY.TryCreateTween((direction, value, duration) =>
-            {
-                Tweener tweener;
-                if (direction == Direction.From)
-                {
-                    float anchoredPositionY = _rectTransform.Value.anchoredPosition.y;
-                    _rectTransform.Value.anchoredPosition = new Vector2(
-                        _rectTransform.Value.anchoredPosition.x,
-                        value);
-                    tweener = _rectTransform.Value.DOAnchorPosY(anchoredPositionY, duration);
-                }
-                else
-                {
-                    tweener = _rectTransform.Value.DOAnchorPosY(value, duration);
-                }
-
-                return tweener;
-            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
-            if (moveYTween != null) _activeTweens.Add(moveYTween);
-
-            Tween scaleXTween = _scaleX.TryCreateTween((direction, value, duration) =>
-            {
-                Tweener tweener;
-                if (direction == Direction.From)
-                {
-                    float localScaleX = _rectTransform.Value.localScale.x;
-                    _rectTransform.Value.localScale = new Vector3(
-                        value,
-                        _rectTransform.Value.localScale.y,
-                        _rectTransform.Value.localScale.z);
-                    tweener = _rectTransform.Value.DOScaleX(localScaleX, duration);
-                }
-                else
-                {
-                    tweener = _rectTransform.Value.DOScaleX(value, duration);
-                }
-
-                return tweener;
-            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
-            if (scaleXTween != null) _activeTweens.Add(scaleXTween);
-
-            Tween scaleYTween = _scaleY.TryCreateTween((direction, value, duration) =>
-            {
-                Tweener tweener;
-                if (direction == Direction.From)
-                {
-                    float localScaleY = _rectTransform.Value.localScale.y;
-                    _rectTransform.Value.localScale = new Vector3(
-                        _rectTransform.Value.localScale.x,
-                        value,
-                        _rectTransform.Value.localScale.z);
-                    tweener = _rectTransform.Value.DOScaleY(localScaleY, duration);
-                }
-                else
-                {
-                    tweener = _rectTransform.Value.DOScaleY(value, duration);
-                }
-
-                return tweener;
-            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
-            if (scaleYTween != null) _activeTweens.Add(scaleYTween);
-
-            Tween rotateTween = _rotate.TryCreateTween((direction, value, duration) =>
-            {
-                Tweener tweener;
-                if (direction == Direction.From)
-                {
-                    Vector3 rotationEulerAngles = _rectTransform.Value.rotation.eulerAngles;
-                    _rectTransform.Value.rotation = Quaternion.Euler(
-                        rotationEulerAngles.x,
-                        rotationEulerAngles.y,
-                        value);
-                    tweener = _rectTransform.Value.DORotate(rotationEulerAngles, duration, RotateMode.FastBeyond360);
-                }
-                else
-                {
-                    Vector3 rotationEulerAngles = _rectTransform.Value.rotation.eulerAngles;
-                    tweener = _rectTransform.Value.DORotate(new Vector3(rotationEulerAngles.x, rotationEulerAngles.y, value),
-                        duration, RotateMode.FastBeyond360);
-                }
-
-                return tweener;
-            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
-            if (rotateTween != null) _activeTweens.Add(rotateTween);
-            
-            Tween fadeTween = _fade.TryCreateTween((direction, value, duration) =>
-            {
-                Tweener tweener;
-                if (direction == Direction.From)
-                {
-                    float alpha = _canvasGroup.Value.alpha;
-                    _canvasGroup.Value.alpha = value;
-                    tweener = _canvasGroup.Value.DOFade(alpha, duration);
-                }
-                else
-                {
-                    tweener = _canvasGroup.Value.DOFade(value, duration);
-                }
-
-                return tweener;
-            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
-            if (fadeTween != null) _activeTweens.Add(fadeTween);
-            
-            Tween colorTween = _color.TryCreateTween((direction, value, duration) =>
-            {
-                Tweener tweener;
-                if (direction == Direction.From)
-                {
-                    Color color = _graphics.Value.color;
-                    _graphics.Value.color = value;
-                    tweener = _graphics.Value.DOColor(color, duration);
-                }
-                else
-                {
-                    tweener = _graphics.Value.DOColor(value, duration);
-                }
-
-                return tweener;
-            }, _unscaledTime, _autoplay, AutoKill, additionalDelay);
-            if (colorTween != null) _activeTweens.Add(colorTween);
-        }
-        
         /// <summary>
         /// Creates tweens from the Inspector setup if none exist, then plays them forward.
         /// </summary>

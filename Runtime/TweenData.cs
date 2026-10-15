@@ -10,8 +10,14 @@ namespace Mane.Unity.DOTween
     [Serializable]
     internal class TweenDataColor : TweenData<Color> { }
 
+    // A tween slot of DOTweenUIController, whatever its value type.
+    internal interface ITweenSlot
+    {
+        bool IsEnable { get; set; }
+    }
+
     [Serializable]
-    internal abstract class TweenData<T>
+    internal abstract class TweenData<T> : ITweenSlot
     {
         [SerializeField] private bool _isEnable;
         [SerializeField] private float _delay;
@@ -29,14 +35,17 @@ namespace Mane.Unity.DOTween
             set => _isEnable = value;
         }
 
-        public Tween TryCreateTween(Func<Direction, T, float, Tween> createTweener,
+        // tweenTo tweens from the current value to the given one. From() reverses it: the target jumps to
+        // the value now and tweens back to where it was.
+        public Tween CreateTween(Func<T, float, Tweener> tweenTo,
             bool unscaledTime, bool autoplay, bool autoKill, float additionalDelay)
         {
-            if (!_isEnable)
-                return null;
+            Tweener tweener = tweenTo(_value, _duration);
+            if (_direction == Direction.From)
+                tweener.From();
 
-            Tween tween = createTweener(_direction, _value, _duration);
-            _easeData.Apply(tween);
+            _easeData.Apply(tweener);
+            Tween tween = tweener;
 
             float delay = _delay + additionalDelay;
             if (_loopCount != 0)

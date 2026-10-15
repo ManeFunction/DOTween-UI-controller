@@ -8,10 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 ### Added
 - Added dependency to [ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git).
+- `DOTweenUIController.GetRequiredComponent(TweenType)` returns the component a tween slot animates.
 
 ### Changed
 - `OptionalSizeField` replaced with universal `LimitedIntField` from the dependent package.
 - Moved context "Add component" menu to `Mane Tools -> UI -> DOTween UI Controller`.
+- A tween slot whose component is missing (`CanvasGroup` for Fade, a `MaskableGraphic` for Color) is skipped with a warning when tweens are created, instead of throwing.
 
 ### Fixed
 - With Autoplay off, finished tweens were auto-killed but kept in the controller, so `Play`, `PlayBackwards`, `Restart` and the inspector buttons worked only once. Code-driven tweens are no longer auto-killed, and killed tweens are rebuilt on the next call.
