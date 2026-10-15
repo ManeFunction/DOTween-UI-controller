@@ -4,30 +4,6 @@
 
 .mie-block > .message-box {
     margin-top: 0;
-    min-width: 0;
-    overflow: hidden;
-    flex-wrap: nowrap;
-}
-
-.mie-block > .message-box > .message-box-label {
-    padding-right: 4px;
-    width: 0;
-    min-width: 0;
-    flex-grow: 1;
-    flex-shrink: 1;
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: clip;
-}
-
-.add-component-button {
-    flex-grow: 0;
-    flex-shrink: 0;
-    height: 18px;
-    margin: 0 0 0 2px;
-    padding: 0 6px;
-    font-size: 11px;
-    align-self: center;
 }
 
 .buttons-row {

@@ -15,21 +15,12 @@ namespace Mane.Unity.DOTween.Editor
     {
         protected override void BuildInspector(VisualElement root)
         {
-            // Setup autoplay toggles
-            Toggle restartOnEnableToggle = root.Q<Toggle>("restartOnEnableToggle");
-            Toggle autoplayToggle = root.Q<Toggle>("autoplayToggle");
-            Toggle createOnStartToggle = root.Q<Toggle>("createOnStartToggle");
-            if (restartOnEnableToggle == null || autoplayToggle == null || createOnStartToggle == null)
-            {
-                Debug.LogError("One or more UI elements for autoplay data not found.");
-            }
-            else
-            {
-                autoplayToggle.RegisterValueChangedCallback(_ => SetMainTogglesVisibility());
-                SetMainTogglesVisibility();
-            }
+            // Autoplay can restart on enable; without it, tweens can be created on Start
+            SerializedProperty autoplay = serializedObject.FindProperty("_autoplay");
+            root.Require<Toggle>("restartOnEnableToggle")?.ShowWhen(() => autoplay.boolValue, autoplay);
+            root.Require<Toggle>("createOnStartToggle")?.ShowWhen(() => !autoplay.boolValue, autoplay);
 
-            // Setup visibility callbacks for each tween data block
+            // Setup each tween data block
             SetupTweenData(DOTweenUIController.TweenType.MoveX, root, "moveX", "Move X");
             SetupTweenData(DOTweenUIController.TweenType.MoveY, root, "moveY", "Move Y");
             SetupTweenData(DOTweenUIController.TweenType.ScaleX, root, "scaleX", "Scale X");
@@ -40,129 +31,68 @@ namespace Mane.Unity.DOTween.Editor
 
             // Play-mode-only controls: built-in VisualElement.tooltip is suppressed in Play Mode
             SetupEditorButtons(root);
-
-            void SetMainTogglesVisibility()
-            {
-                restartOnEnableToggle.SetVisible(autoplayToggle.value);
-                createOnStartToggle.SetVisible(!autoplayToggle.value);
-            }
         }
 
         private void SetupTweenData(DOTweenUIController.TweenType tweenType, VisualElement root,
             string elementName, string label)
         {
-            Type requiredComponent = DOTweenUIController.GetRequiredComponent(tweenType);
-            VisualElement tweenDataElement = root.Q<VisualElement>(elementName);
-            if (tweenDataElement == null)
-            {
-                Debug.LogError($"VisualElement '{elementName}' not found in root.");
-                return;
-            }
-
-            // Content container
-            VisualElement contentContainer = tweenDataElement.Q<VisualElement>("contentContainer");
-            if (contentContainer == null)
-            {
-                Debug.LogError($"Content container 'contentContainer' not found in '{elementName}'.");
-                return;
-            }
-
-            // Toggle
-            Toggle isEnableToggle = tweenDataElement.Q<Toggle>("isEnableToggle");
+            TemplateContainer tweenDataElement = root.Require<TemplateContainer>(elementName);
+            Toggle isEnableToggle = tweenDataElement?.Require<Toggle>("isEnableToggle");
             if (isEnableToggle == null)
-            {
-                Debug.LogError($"Toggle 'isEnableToggle' not found in '{elementName}'.");
                 return;
-            }
 
             isEnableToggle.text = label;
+            AddRequiredComponentBox(tweenType, tweenDataElement, isEnableToggle);
 
+            // The UXML instance binds the block to its tween data
+            SerializedProperty data = serializedObject.FindProperty(tweenDataElement.bindingPath);
+            if (data == null)
+            {
+                Debug.LogError($"'{tweenDataElement.bindingPath}' was not found on {nameof(DOTweenUIController)}.");
+                return;
+            }
+
+            SerializedProperty loopCount = data.FindPropertyRelative("_loopCount");
+            SerializedProperty useCurve = data.FindPropertyRelative("_easeData._useCurve");
+            tweenDataElement.Require<VisualElement>("loopOptions")?.ShowWhen(() => loopCount.intValue != 0, loopCount);
+            tweenDataElement.Require<VisualElement>("curveField")?.ShowWhen(() => useCurve.boolValue, useCurve);
+            tweenDataElement.Require<VisualElement>("easeField")?.ShowWhen(() => !useCurve.boolValue, useCurve);
+        }
+
+        // Disables a tween whose component is missing and explains why, with an "Add" action when it can be added.
+        private void AddRequiredComponentBox(DOTweenUIController.TweenType tweenType, VisualElement tweenDataElement,
+            Toggle isEnableToggle)
+        {
+            Type requiredComponent = DOTweenUIController.GetRequiredComponent(tweenType);
+            if (requiredComponent == null || TargetHasComponent(requiredComponent))
+                return;
+
+            ((DOTweenUIController)target).SetTweenEnabled(tweenType, false);
+            isEnableToggle.SetEnabled(false);
+
+            string message = $"'{requiredComponent.Name}' is required";
             Type componentToAdd = GetAddableComponentType(requiredComponent);
-            if (requiredComponent != null && !TargetHasComponent(requiredComponent))
-            {
-                ((DOTweenUIController)target).SetTweenEnabled(tweenType, false);
-                isEnableToggle.SetEnabled(false);
-
-                VisualElement messageBox = InfoBoxDrawer.Create(
-                    $"'{requiredComponent.Name}' is required",
-                    InfoBoxType.Warning);
-                messageBox.name = "messageBox";
-                messageBox.tooltip = isEnableToggle.tooltip = $"'{requiredComponent.Name}' is required";
-
-                Button addComponentButton = new()
+            VisualElement messageBox = null;
+            Action addComponent = componentToAdd == null
+                ? null
+                : () =>
                 {
-                    name = "addComponentButton",
-                    text = "Add",
-                    tooltip = "Add"
+                    GameObject gameObject = ((DOTweenUIController)target).gameObject;
+                    if (gameObject.GetComponent(requiredComponent) != null)
+                        return;
+
+                    Undo.AddComponent(gameObject, componentToAdd);
+                    messageBox.SetVisible(false);
+                    isEnableToggle.SetEnabled(true);
+                    isEnableToggle.tooltip = string.Empty;
                 };
-                addComponentButton.AddToClassList("mie-button");
-                addComponentButton.AddToClassList("add-component-button");
 
-                if (componentToAdd == null)
-                {
-                    addComponentButton.style.display = DisplayStyle.None;
-                }
-                else
-                {
-                    addComponentButton.clicked += () =>
-                    {
-                        GameObject gameObject = ((DOTweenUIController)target).gameObject;
-                        if (gameObject.GetComponent(requiredComponent) != null)
-                            return;
+            messageBox = InfoBoxDrawer.Create(message, InfoBoxType.Warning, "Add", addComponent);
+            messageBox.name = "messageBox";
+            messageBox.tooltip = isEnableToggle.tooltip = message;
 
-                        Undo.AddComponent(gameObject, componentToAdd);
-                        messageBox.style.display = DisplayStyle.None;
-                        isEnableToggle.SetEnabled(true);
-                        isEnableToggle.tooltip = string.Empty;
-                    };
-                }
-
-                messageBox.Add(addComponentButton);
-
-                VisualElement block = tweenDataElement.Q(className: "mie-block") ?? tweenDataElement;
-                block.Insert(0, messageBox);
-            }
-
-            IntegerField loopField = contentContainer.Q<IntegerField>("loopCountField");
-            VisualElement loopOptions = contentContainer.Q<VisualElement>("loopOptions");
-            if (loopField == null || loopOptions == null)
-            {
-                Debug.LogError("One or more UI elements for loop data not found.");
-                return;
-            }
-
-            UpdateLoopField();
-            loopField.RegisterValueChangedCallback(_ => { UpdateLoopField(); });
-
-            // Handle useCurveToggle
-            Toggle useCurveToggle = contentContainer.Q<Toggle>("useCurveToggle");
-            VisualElement curveField = contentContainer.Q<VisualElement>("curveField");
-            VisualElement easeField = contentContainer.Q<VisualElement>("easeField");
-
-            if (useCurveToggle == null || curveField == null || easeField == null)
-            {
-                Debug.LogError("One or more UI elements for ease data not found.");
-                return;
-            }
-
-            // Initialize easing fields visibility
-            UpdateEaseFields();
-
-            useCurveToggle.RegisterValueChangedCallback(_ => { UpdateEaseFields(); });
-
-            return;
-
-            void UpdateLoopField()
-            {
-                loopOptions.SetVisible(loopField.value != 0);
-            }
-
-            void UpdateEaseFields()
-            {
-                bool useCurve = useCurveToggle.value;
-                curveField.SetVisible(useCurve);
-                easeField.SetVisible(!useCurve);
-            }
+            VisualElement block = tweenDataElement.Q(className: "mie-block") ?? tweenDataElement;
+            block.Insert(0, messageBox);
         }
             
         private void SetupEditorButtons(VisualElement root)
@@ -233,14 +163,9 @@ namespace Mane.Unity.DOTween.Editor
 
         private static void InitButton(VisualElement root, string buttonName, Action action)
         {
-            Button button = root.Q<Button>(buttonName);
-            if (button == null)
-            {
-                Debug.LogError($"{buttonName} button not found.");
-                return;
-            }
-
-            button.clicked += action;
+            Button button = root.Require<Button>(buttonName);
+            if (button != null)
+                button.clicked += action;
         }
 
         private bool TargetHasComponent(Type componentType) => 
