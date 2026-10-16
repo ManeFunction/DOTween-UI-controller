@@ -59,7 +59,9 @@ namespace Mane.Unity.DOTween.Editor
             tweenDataElement.Require<VisualElement>("easeField")?.ShowWhen(() => !useCurve.boolValue, useCurve);
         }
 
-        // Disables a tween whose component is missing and explains why, with an "Add" action when it can be added.
+        // Explains that a tween's component is missing, with an "Add" action when it can be added, and locks its
+        // toggle. The stored setting is left alone: tweens skip a slot without its component at runtime anyway,
+        // and once the component is added the slot works as it was set.
         private void AddRequiredComponentBox(DOTweenUIController.TweenType tweenType, VisualElement tweenDataElement,
             Toggle isEnableToggle)
         {
@@ -67,7 +69,6 @@ namespace Mane.Unity.DOTween.Editor
             if (requiredComponent == null || TargetHasComponent(requiredComponent))
                 return;
 
-            ((DOTweenUIController)target).SetTweenEnabled(tweenType, false);
             isEnableToggle.SetEnabled(false);
 
             string message = $"'{requiredComponent.Name}' is required";

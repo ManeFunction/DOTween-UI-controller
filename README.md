@@ -6,7 +6,7 @@ The package is supported starting from **Unity 6.0.81** (6000.1.81f1) and depend
 
 ## Features
 
-- Seven pre-configured tweens for all essential UI animation operations: **Move** (X/Y), **Scale** (X/Y), **Rotate** (Z only), **Color** (for Images and other MaskableGraphic components), and **Fade** (for the alpha property of CanvasGroup).
+- Seven pre-configured tweens for all essential UI animation operations: **Move** (X/Y), **Scale** (X/Y), **Rotate** (local Z only), **Color** (for Images and other MaskableGraphic components), and **Fade** (for the alpha property of CanvasGroup).
 - A powerful inspector built with the `UI Toolkit`, designed to optimize editor rendering performance.
 - Lazy initialization of required components to streamline the workflow and enhance efficiency.
 - Flexible Unity lifecycle integration, allowing tweens to pause on `OnDisable()`, for example, or to be reused and replayed on `OnEnable()`.

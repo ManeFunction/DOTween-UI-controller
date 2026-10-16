@@ -139,8 +139,8 @@ namespace Mane.Unity.DOTween
             Add(TweenType.ScaleY, _scaleY, (value, duration) => rect.DOScaleY(value, duration));
             Add(TweenType.Rotate, _rotate, (value, duration) =>
             {
-                Vector3 euler = rect.rotation.eulerAngles;
-                return rect.DORotate(new Vector3(euler.x, euler.y, value), duration, RotateMode.FastBeyond360);
+                Vector3 euler = rect.localEulerAngles;
+                return rect.DOLocalRotate(new Vector3(euler.x, euler.y, value), duration, RotateMode.FastBeyond360);
             });
             Add(TweenType.Fade, _fade, (value, duration) => GetComponent<CanvasGroup>().DOFade(value, duration));
             Add(TweenType.Color, _color, (value, duration) => GetComponent<MaskableGraphic>().DOColor(value, duration));

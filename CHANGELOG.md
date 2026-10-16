@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - With Autoplay off, finished tweens were auto-killed but kept in the controller, so `Play`, `PlayBackwards`, `Restart` and the inspector buttons worked only once. Code-driven tweens are no longer auto-killed, and killed tweens are rebuilt on the next call.
 - Calling `Play` before `Start` (for example right after `Instantiate`) made `Start` create a second set of tweens that fought the first one.
 - With Delay Between Loops set, Autoplay off, Unscaled Time and auto-kill were ignored, because they were applied to the tween nested in the loop sequence.
+- Rotate animated the world rotation, although it is documented as local Z, so under a rotated parent the element ended at a different angle than set. It now animates the local rotation, like Move and Scale work in the parent's space.
+- When a tween's component was missing, the inspector switched that tween off just by being opened, without Undo and without marking the object dirty, so the change could be lost or saved by accident. It now only shows the warning and locks the toggle; the setting is kept, and the tween is skipped at runtime until the component is added.
 - Pause On Disable resumed tweens on enable that were never played or were paused from code. Only the tweens it paused are resumed now.
 
 
