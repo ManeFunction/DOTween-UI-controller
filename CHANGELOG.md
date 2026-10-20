@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - `OptionalSizeField` replaced with universal `LimitedIntField` from the dependent package.
+- Tween blocks in the inspector use the `FeatureBlock` control from the dependent package, the same one `FeatureToggle` builds.
 - Moved context "Add component" menu to `Mane Tools -> UI -> DOTween UI Controller`.
 - A tween slot whose component is missing (`CanvasGroup` for Fade, a `MaskableGraphic` for Color) is skipped with a warning when tweens are created, instead of throwing.
 

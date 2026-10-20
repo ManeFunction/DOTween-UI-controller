@@ -37,12 +37,12 @@ namespace Mane.Unity.DOTween.Editor
             string elementName, string label)
         {
             TemplateContainer tweenDataElement = root.Require<TemplateContainer>(elementName);
-            Toggle isEnableToggle = tweenDataElement?.Require<Toggle>("isEnableToggle");
-            if (isEnableToggle == null)
+            FeatureBlock block = tweenDataElement?.Require<FeatureBlock>("featureBlock");
+            if (block == null)
                 return;
 
-            isEnableToggle.text = label;
-            AddRequiredComponentBox(tweenType, tweenDataElement, isEnableToggle);
+            block.Header = label;
+            AddRequiredComponentBox(tweenType, block);
 
             // The UXML instance binds the block to its tween data
             SerializedProperty data = serializedObject.FindProperty(tweenDataElement.bindingPath);
@@ -62,13 +62,13 @@ namespace Mane.Unity.DOTween.Editor
         // Explains that a tween's component is missing, with an "Add" action when it can be added, and locks its
         // toggle. The stored setting is left alone: tweens skip a slot without its component at runtime anyway,
         // and once the component is added the slot works as it was set.
-        private void AddRequiredComponentBox(DOTweenUIController.TweenType tweenType, VisualElement tweenDataElement,
-            Toggle isEnableToggle)
+        private void AddRequiredComponentBox(DOTweenUIController.TweenType tweenType, FeatureBlock block)
         {
             Type requiredComponent = DOTweenUIController.GetRequiredComponent(tweenType);
             if (requiredComponent == null || TargetHasComponent(requiredComponent))
                 return;
 
+            Toggle isEnableToggle = block.Toggle;
             isEnableToggle.SetEnabled(false);
 
             string message = $"'{requiredComponent.Name}' is required";
@@ -92,8 +92,8 @@ namespace Mane.Unity.DOTween.Editor
             messageBox.name = "messageBox";
             messageBox.tooltip = isEnableToggle.tooltip = message;
 
-            VisualElement block = tweenDataElement.Q(className: "mie-block") ?? tweenDataElement;
-            block.Insert(0, messageBox);
+            // Above the toggle, outside the content, so it stays visible while the tween is off.
+            block.hierarchy.Insert(0, messageBox);
         }
             
         private void SetupEditorButtons(VisualElement root)
