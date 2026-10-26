@@ -6,6 +6,9 @@
   "unity": "6000.0",
   "unityRelease": "81f1",
   "license": "MIT",
+  "documentationUrl": "https://github.com/ManeFunction/DOTween-UI-controller/blob/master/README.md",
+  "changelogUrl": "https://github.com/ManeFunction/DOTween-UI-controller/blob/master/CHANGELOG.md",
+  "licensesUrl": "https://github.com/ManeFunction/DOTween-UI-controller/blob/master/LICENSE",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ManeFunction/DOTween-UI-controller.git"
