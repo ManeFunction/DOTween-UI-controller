@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 - With Autoplay off, finished tweens were auto-killed but kept in the controller, so `Play`, `PlayBackwards`, `Restart` and the inspector buttons worked only once. Code-driven tweens are no longer auto-killed, and killed tweens are rebuilt on the next call.
+- With one-shot tweens (Autoplay on, Restart On Enable off), a looping slot outlived the others, so `Play` and `Restart` replayed only that slot. If any tween was killed, the rest are now rewound and disposed, and every slot is rebuilt.
 - Calling `Play` before `Start` (for example right after `Instantiate`) made `Start` create a second set of tweens that fought the first one.
 - With Delay Between Loops set, Autoplay off, Unscaled Time and auto-kill were ignored, because they were applied to the tween nested in the loop sequence.
 - Rotate animated the world rotation, although it is documented as local Z, so under a rotated parent the element ended at a different angle than set. It now animates the local rotation, like Move and Scale work in the parent's space.

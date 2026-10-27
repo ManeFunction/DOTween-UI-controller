@@ -67,7 +67,7 @@ controller.StopAndDispose();    // kills tweens; the next Play rebuilds them
 controller.UndoAndDispose();    // rewinds, then kills tweens
 ```
 
-With Autoplay on and Restart On Enable off, tweens are one-shot: they are killed when they finish, and the next `Play` rebuilds them. In any other setup the tweens stay alive until `StopAndDispose`, `UndoAndDispose` or destroy.
+With Autoplay on and Restart On Enable off, tweens are one-shot: they are killed when they finish, and the next `Play` rebuilds them. Looping slots are never killed this way; when they outlive the one-shot ones, they are rewound and rebuilt along with them. In any other setup the tweens stay alive until `StopAndDispose`, `UndoAndDispose` or destroy.
 
 Each inspector tween slot can be switched on or off with `SetTweenEnabled`. Tweens that already exist are not rebuilt, so dispose them first if a running animation should pick up the change:
 

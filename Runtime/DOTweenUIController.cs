@@ -245,7 +245,7 @@ namespace Mane.Unity.DOTweenUIC
         /// </summary>
         public void Restart()
         {
-            RemoveKilledTweens();
+            DisposeIfAnyKilled();
             if (_activeTweens.Count == 0)
                 Play();
             else
@@ -260,7 +260,7 @@ namespace Mane.Unity.DOTweenUIC
         /// </summary>
         public void RestartBackwards()
         {
-            RemoveKilledTweens();
+            DisposeIfAnyKilled();
             if (_activeTweens.Count == 0)
                 PlayBackwards();
             else
@@ -283,13 +283,18 @@ namespace Mane.Unity.DOTweenUIC
 
         private void TryCreateTweens(float delay = 0f)
         {
-            RemoveKilledTweens();
+            DisposeIfAnyKilled();
             if (_activeTweens.Count == 0)
                 CreateTweeners(delay);
         }
 
-        // Auto-killed or externally killed tweens are dead handles; drop them so the next call rebuilds.
-        private void RemoveKilledTweens() => _activeTweens.RemoveAll(tween => !tween.IsActive());
+        // Auto-killed or externally killed tweens are dead handles. Looping slots are never auto-killed, so
+        // they can outlive the one-shot ones; dispose them too, so the next call rebuilds every slot together.
+        private void DisposeIfAnyKilled()
+        {
+            if (_activeTweens.RemoveAll(tween => !tween.IsActive()) > 0)
+                UndoAndDispose();
+        }
         
         private void PlayTweens()
         {
