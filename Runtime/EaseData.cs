@@ -2,7 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Mane.Unity.DOTween
+namespace Mane.Unity.DOTweenUIC
 {
     [Serializable]
     internal class EaseData

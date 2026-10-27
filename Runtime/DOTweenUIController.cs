@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Mane.Unity.DOTween
+namespace Mane.Unity.DOTweenUIC
 {
     /// <summary>
     /// Inspector-driven UI tweens (move, scale, rotate Z, CanvasGroup fade, graphic color)
