@@ -8,7 +8,7 @@ using Button = UnityEngine.UIElements.Button;
 using Image = UnityEngine.UI.Image;
 using Toggle = UnityEngine.UIElements.Toggle;
 
-namespace Mane.Unity.DOTweenUIC.Editor
+namespace Mane.Unity.DOTween.Editor
 {
     [CustomEditor(typeof(DOTweenUIController))]
     public class DOTweenUIControllerEditor : ManeEditor

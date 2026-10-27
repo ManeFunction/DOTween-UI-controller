@@ -54,7 +54,7 @@ Open the `Add Component` menu on a UI object, go to `Mane Tools -> UI -> DOTween
 Playback can also be driven from code. The lifecycle flags from the inspector (autoplay, pause on disable, finish on stop) still apply.
 
 ```csharp
-using Mane.Unity.DOTweenUIC;
+using Mane.Unity.DOTween;
 
 controller.Play();              // creates tweens if needed, plays forward
 controller.PlayBackwards(0.2f); // optional extra delay, used only when tweens are created

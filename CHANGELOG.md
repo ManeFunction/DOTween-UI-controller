@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `DOTweenUIController.GetRequiredComponent(TweenType)` returns the component a tween slot animates.
 
 ### Changed
-- BREAKING CHANGE: Namespace was changed to `Mane.Unity.DOTweenUIC`.
 - `OptionalSizeField` replaced with universal `LimitedIntField` from the dependent package.
 - Tween blocks in the inspector use the `FeatureBlock` control from the dependent package, the same one `FeatureToggle` builds.
 - Moved context "Add component" menu to `Mane Tools -> UI -> DOTween UI Controller`.
