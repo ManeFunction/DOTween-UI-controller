@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [2.2.0] - 2026-10-27
+## [2.2.0] - 2026-10-28
 ### Added
 - Added dependency to [ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git).
 - `DOTweenUIController.GetRequiredComponent(TweenType)` returns the component a tween slot animates.
