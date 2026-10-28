@@ -34,11 +34,9 @@ The package is supported from **Unity 6.0.81** (6000.0.81f1) and has dependencie
 
 ![](https://raw.githubusercontent.com/wiki/ManeFunction/DOTween-UI-controller/dependencies.png)
 
-[ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git) is required for the editor only, and `OpenUPM` installs it.
-
-[Unity UI](https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/index.html) package is required too.
-
-[DOTween](http://dotween.demigiant.com/) asset (free or Pro) is required and is installed separately.
+- [ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git) is required for the editor only, and `OpenUPM` installs it.
+- [Unity UI](https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/index.html) package is required too.
+- [DOTween](http://dotween.demigiant.com/) asset (free or Pro) is required and is installed separately.
 
 ## Installation
 
