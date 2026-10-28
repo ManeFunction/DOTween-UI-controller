@@ -11,6 +11,7 @@ The package is supported from **Unity 6.0.81** (6000.0.81f1) and has dependencie
 - [Usage](#usage)
   - [Scripting](#scripting)
 - [Disclaimer](#disclaimer)
+- [Why Preview?](#why-preview)
 - [Repository info](#repository-info)
 
 ## Features
@@ -101,6 +102,10 @@ controller.Play();
 This controller is made to work with [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), a tweening library created and copyrighted by [Daniele Giardini](http://blog.demigiant.com).  
 `DOTween` is not created, owned, or maintained by me, and all rights to `DOTween` belong to its respective author.
 For more information about `DOTween`, including licensing and terms of use, please visit the [official website](http://dotween.demigiant.com/).
+
+## Why Preview?
+
+The controller itself is not new, but it now depends on the preview ManeTools packages, and the pile of fixes in this version is a great way to invent fresh bugs. Let's give it a little time to surface whatever I missed. Use at your own risk, I suppose.
 
 ## Repository info
 
