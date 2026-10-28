@@ -2,7 +2,16 @@
 
 A neat Unity controller component to set up UI `DOTween` animations without any code. `DOTween Pro` is not required, but it is supported!
 
-The package is supported starting from **Unity 6.0.81** (6000.0.81f1) and dependent on [ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git) (Editor part only).
+The package is supported from **Unity 6.0.81** (6000.0.81f1) and has dependencies managed automatically with `OpenUPM`. More information is in [Dependencies](#dependencies) section.
+
+- [Features](#features)
+- [Inspector](#inspector)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Scripting](#scripting)
+- [Disclaimer](#disclaimer)
+- [Repository info](#repository-info)
 
 ## Features
 
@@ -17,9 +26,19 @@ The package is supported starting from **Unity 6.0.81** (6000.0.81f1) and depend
 - Full programmatic control is also available for developers who prefer working directly in code.
 - The ability to replay animations directly from the editor for testing and fine-tuning without relaunching your game (available only in `Play mode` due to `DOTween` limitations).
 
-## Look
+## Inspector
 
 ![](https://raw.githubusercontent.com/wiki/ManeFunction/DOTween-UI-controller/main.png)
+
+## Dependencies
+
+![](https://raw.githubusercontent.com/wiki/ManeFunction/DOTween-UI-controller/dependencies.png)
+
+[ManeTools-Unity](https://github.com/ManeFunction/ManeTools-Unity.git) is required for the editor only, and `OpenUPM` installs it.
+
+[Unity UI](https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/index.html) package is required too.
+
+[DOTween](http://dotween.demigiant.com/) asset (free or Pro) is required and is installed separately.
 
 ## Installation
 
