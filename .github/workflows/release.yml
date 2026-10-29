@@ -1,0 +1,118 @@
+# Packs the package, signs it with the Unity organization and attaches the signed .tgz to a GitHub Release.
+# OpenUPM (trackingMode: githubRelease) publishes that release asset unchanged.
+name: Release
+
+on:
+  push:
+    tags:
+      - "[0-9]*"
+
+permissions:
+  contents: read
+
+env:
+  UPM_CLI_VERSION: v9.36.0
+  DIST_DIR: dist
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check the tag matches the package version
+        run: |
+          PACKAGE_VERSION=$(jq -r .version package.json)
+          echo "tag=$GITHUB_REF_NAME package=$PACKAGE_VERSION"
+          test "$GITHUB_REF_NAME" = "$PACKAGE_VERSION"
+
+      - name: Install Unity UPM CLI
+        run: |
+          curl -fsSL https://cdn.packages.unity.com/upm-cli/install.sh -o "$RUNNER_TEMP/install-upm.sh"
+          bash "$RUNNER_TEMP/install-upm.sh" "$UPM_CLI_VERSION"
+          echo "$HOME/.upm/bin" >> "$GITHUB_PATH"
+
+      - name: Stage the package files
+        # Only tracked files go into the tarball, without the repository's own tooling.
+        run: |
+          STAGE_DIR="$RUNNER_TEMP/package"
+          mkdir -p "$STAGE_DIR"
+          git archive HEAD | tar -x -C "$STAGE_DIR"
+          rm -rf "$STAGE_DIR/.github" "$STAGE_DIR/.gitignore"
+          echo "STAGE_DIR=$STAGE_DIR" >> "$GITHUB_ENV"
+
+      - name: Pack and sign
+        env:
+          UPM_SERVICE_ACCOUNT_KEY_ID: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_ID }}
+          UPM_SERVICE_ACCOUNT_KEY_SECRET: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_SECRET }}
+          UPM_ORG_ID: ${{ secrets.UPM_ORG_ID }}
+        run: upm pack "$STAGE_DIR" --organization-id "$UPM_ORG_ID" --destination "$DIST_DIR"
+
+      - name: Verify the signed tarball
+        run: |
+          shopt -s nullglob
+          archives=("$DIST_DIR"/*.tgz "$DIST_DIR"/*.tar.gz)
+          if [ "${#archives[@]}" -ne 1 ]; then
+            echo "Expected exactly one package archive, found ${#archives[@]}" >&2
+            exit 1
+          fi
+          archive="${archives[0]}"
+          tar -tzf "$archive" > "$RUNNER_TEMP/files.txt"
+          grep -qx 'package/package.json' "$RUNNER_TEMP/files.txt"
+          grep -qx 'package/.attestation.p7m' "$RUNNER_TEMP/files.txt"
+          ARCHIVE_VERSION=$(tar -xOzf "$archive" package/package.json | jq -r .version)
+          echo "$(basename "$archive"): version $ARCHIVE_VERSION, $(wc -l < "$RUNNER_TEMP/files.txt") files"
+          test "$ARCHIVE_VERSION" = "$GITHUB_REF_NAME"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signed-package
+          path: ${{ env.DIST_DIR }}
+          if-no-files-found: error
+
+  github-release:
+    needs: sign
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to create a GitHub Release
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history + tags -- needed to diff against the previous release tag
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: signed-package
+          path: ${{ env.DIST_DIR }}
+
+      - name: Build release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          RANGE="${PREV_TAG:+$PREV_TAG..}${GITHUB_REF_NAME}"
+
+          python3 .github/scripts/categorize_changelog.py "$RANGE" > changelog_section.md
+
+          gh api --method POST "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+            -f tag_name="$GITHUB_REF_NAME" --jq .body > auto_notes.md
+
+          {
+            cat auto_notes.md
+            echo ""
+            echo ""
+            cat changelog_section.md
+          } > release_notes.md
+
+      - name: Create GitHub Release
+        # The signed .tgz must stay attached: OpenUPM downloads it from here, also for rebuilds of old versions.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PRERELEASE=""
+          case "$GITHUB_REF_NAME" in *-*) PRERELEASE="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" "$DIST_DIR"/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release_notes.md \
+            $PRERELEASE

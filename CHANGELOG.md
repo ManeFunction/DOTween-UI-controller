@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Releases are signed with a Unity package signature, so the Package Manager in Unity 6.3 and newer no longer warns that the package is unsigned. Versions up to 2.2.0-preview.1 stay unsigned.
 
 ## [2.2.0-preview.1] - 2026-10-28
 ### Added
